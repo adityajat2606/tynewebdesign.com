@@ -54,14 +54,20 @@ export function TaskListClient({ task, initialPosts, category }: Props) {
 
   if (!merged.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-border p-10 text-center text-muted-foreground">
-        No posts yet for this section.
+      <div className="rounded-[1.5rem] border border-dashed border-border bg-muted/30 p-14 text-center text-muted-foreground">
+        <p className="text-base font-medium text-foreground">Nothing here yet</p>
+        <p className="mt-2 text-sm">New posts will appear in this gallery when they are published.</p>
       </div>
     );
   }
 
+  const layoutClass =
+    task === "image"
+      ? "gallery-masonry"
+      : "grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div className={layoutClass}>
       {merged.map((post) => {
         const localOnly = (post as any).localOnly;
         const href = localOnly

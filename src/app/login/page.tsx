@@ -32,11 +32,11 @@ function getLoginConfig(kind: ReturnType<typeof getProductKind>) {
   }
   if (kind === 'visual') {
     return {
-      shell: 'bg-[#07101f] text-white',
-      panel: 'border border-white/10 bg-white/6',
-      side: 'border border-white/10 bg-white/5',
-      muted: 'text-slate-300',
-      action: 'bg-[#8df0c8] text-[#07111f] hover:bg-[#77dfb8]',
+      shell: 'bg-background text-foreground',
+      panel: 'border border-border bg-card shadow-[0_22px_50px_-12px_rgba(15,23,42,0.12)]',
+      side: 'border border-border bg-muted/50',
+      muted: 'text-muted-foreground',
+      action: 'bg-foreground text-background hover:bg-foreground/90',
       icon: ImageIcon,
       title: 'Enter the creator workspace',
       body: 'Open your visual feed, creator profile, and publishing tools without dropping into a generic admin shell.',

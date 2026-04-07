@@ -106,43 +106,59 @@ export default async function ProfileDetailPage({ params }: { params: Promise<{ 
     ],
   };
 
+  const coverUrl =
+    typeof content.images?.[0] === "string"
+      ? content.images[0]
+      : typeof content.logo === "string"
+        ? content.logo
+        : logoUrl;
+
   return (
     <div className="min-h-screen bg-background">
       <NavbarShell />
-      <main className="mx-auto w-full max-w-6xl px-4 pb-16 pt-10 sm:px-6 lg:px-8">
+      <main className="mx-auto w-full max-w-5xl px-4 pb-20 pt-6 sm:px-6 lg:px-8">
         <SchemaJsonLd data={breadcrumbData} />
-        <section className="rounded-3xl border border-border/60 bg-white/90 p-8 shadow-sm md:p-12">
-          <div className="grid gap-8 md:grid-cols-[200px_1fr] md:items-start">
-            <div className="flex justify-center md:justify-start">
-              <div className="relative h-36 w-36 overflow-hidden rounded-full border border-border/70 bg-muted">
+        <section className="overflow-hidden rounded-[2rem] border border-black/[0.06] bg-card shadow-[0_28px_80px_-24px_rgba(15,23,42,0.18)]">
+          <div className="relative h-44 sm:h-56 md:h-64">
+            {coverUrl ? (
+              <ContentImage src={coverUrl} alt={`${brandName} cover`} fill className="object-cover" sizes="100vw" priority={false} />
+            ) : (
+              <div className="h-full w-full bg-gradient-to-br from-muted via-background to-muted" />
+            )}
+            <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/20 to-transparent" />
+          </div>
+          <div className="relative px-6 pb-10 pt-0 md:px-10">
+            <div className="-mt-16 flex flex-col items-center gap-6 md:-mt-20 md:flex-row md:items-end md:gap-10">
+              <div className="relative h-32 w-32 shrink-0 overflow-hidden rounded-[2rem] border-4 border-background bg-muted shadow-lg">
                 {logoUrl ? (
-                  <ContentImage src={logoUrl} alt={post.title} fill className="object-cover" sizes="144px" intrinsicWidth={144} intrinsicHeight={144} />
+                  <ContentImage src={logoUrl} alt={post.title} fill className="object-cover" sizes="128px" intrinsicWidth={144} intrinsicHeight={144} />
                 ) : (
                   <div className="flex h-full w-full items-center justify-center text-3xl font-semibold text-muted-foreground">
                     {post.title.slice(0, 1).toUpperCase()}
                   </div>
                 )}
               </div>
+              <div className="min-w-0 flex-1 text-center md:pb-2 md:text-left">
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Creator</p>
+                <h1 className="mt-2 text-3xl font-semibold tracking-[-0.03em] text-foreground sm:text-4xl">{brandName}</h1>
+                {domain ? (
+                  <p className="mt-2 text-sm font-medium text-muted-foreground">{domain}</p>
+                ) : null}
+                {website ? (
+                  <div className="mt-8 md:mt-6">
+                    <Button asChild size="lg" className="rounded-full px-8 shadow-md">
+                      <Link href={website} target="_blank" rel="noopener noreferrer">
+                        Visit website
+                      </Link>
+                    </Button>
+                  </div>
+                ) : null}
+              </div>
             </div>
-            <div>
-              <h1 className="text-3xl font-bold text-foreground sm:text-4xl">{brandName}</h1>
-              {domain ? (
-                <p className="mt-1 text-sm font-medium text-muted-foreground">{domain}</p>
-              ) : null}
-              <article
-                className="article-content prose prose-slate mt-6 max-w-2xl text-base leading-relaxed prose-p:my-4 prose-a:text-primary prose-a:underline prose-strong:font-semibold"
-                dangerouslySetInnerHTML={{ __html: descriptionHtml }}
-              />
-              {website ? (
-                <div className="mt-8">
-                  <Button asChild size="lg" className="px-7 text-base">
-                    <Link href={website} target="_blank" rel="noopener noreferrer">
-                      Visit Official Site
-                    </Link>
-                  </Button>
-                </div>
-              ) : null}
-            </div>
+            <article
+              className="article-content prose prose-slate mx-auto mt-10 max-w-2xl text-base leading-relaxed prose-p:my-4 prose-a:text-primary prose-a:underline prose-strong:font-semibold md:mt-12"
+              dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+            />
           </div>
         </section>
 

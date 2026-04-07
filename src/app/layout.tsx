@@ -8,6 +8,8 @@ import { Toaster } from '@/components/ui/toaster'
 import { AuthProvider } from '@/lib/auth-context'
 import { buildSiteMetadata } from '@/lib/seo'
 import { getFactoryState } from '@/design/factory/get-factory-state'
+import { VisualShellPadding } from '@/components/shared/visual-shell-padding'
+import { VisualSidebarProvider } from '@/components/shared/visual-sidebar-context'
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildSiteMetadata()
@@ -25,7 +27,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       >
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <AuthProvider>
-            {children}
+            <VisualSidebarProvider>
+              <VisualShellPadding>{children}</VisualShellPadding>
+            </VisualSidebarProvider>
             <Toaster />
           </AuthProvider>
         </ThemeProvider>

@@ -3,6 +3,7 @@ import { FileText, Building2, LayoutGrid, Tag, Github, Twitter, Linkedin, Image 
 import { SITE_CONFIG, type TaskKey } from '@/lib/site-config'
 import { siteContent } from '@/config/site.content'
 import { getFactoryState } from '@/design/factory/get-factory-state'
+import { getProductKind } from '@/design/factory/get-product-kind'
 
 const taskIcons: Record<TaskKey, any> = {
   article: FileText,
@@ -17,12 +18,22 @@ const taskIcons: Record<TaskKey, any> = {
   comment: FileText,
 }
 
-const footerLinks = {
-  platform: SITE_CONFIG.tasks.filter((task) => task.enabled).map((task) => ({
+const buildPlatformLinks = () => {
+  const { recipe } = getFactoryState()
+  const visual = getProductKind(recipe) === 'visual'
+  const tasks = SITE_CONFIG.tasks.filter((task) => task.enabled)
+  const filtered = visual ? tasks.filter((task) => task.key === 'image' || task.key === 'profile') : tasks
+  return filtered.map((task) => ({
     name: task.label,
     href: task.route,
     icon: taskIcons[task.key] || LayoutGrid,
-  })),
+  }))
+}
+
+const footerLinks = {
+  get platform() {
+    return buildPlatformLinks()
+  },
   company: [
     { name: 'About', href: '/about' },
     { name: 'Team', href: '/team' },
@@ -77,49 +88,67 @@ export function Footer() {
 
   if (recipe.footer === 'dense-footer') {
     return (
-      <footer className="border-t border-white/10 bg-[linear-gradient(180deg,#07111f_0%,#0b1a2e_100%)] text-white">
+      <footer className="border-t border-zinc-800/80 bg-[linear-gradient(180deg,oklch(0.14_0.02_260)_0%,oklch(0.11_0.02_260)_100%)] text-zinc-100">
         <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr_1fr]">
-            <div className="rounded-[2rem] border border-white/10 bg-white/5 p-7">
+          <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr_1fr]">
+            <div className="rounded-[2rem] border border-white/[0.08] bg-white/[0.04] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-sm">
               <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/12 bg-white/8 p-1.5">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.06] p-1.5">
                   <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
                 </div>
                 <div>
-                  <p className="text-lg font-semibold">{SITE_CONFIG.name}</p>
-                  <p className="text-xs uppercase tracking-[0.24em] text-slate-400">{siteContent.footer.tagline}</p>
+                  <p className="text-lg font-semibold tracking-tight">{SITE_CONFIG.name}</p>
+                  <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">{siteContent.footer.tagline}</p>
                 </div>
               </div>
-              <p className="mt-5 max-w-md text-sm leading-7 text-slate-300">{SITE_CONFIG.description}</p>
+              <p className="mt-5 max-w-md text-sm leading-7 text-zinc-400">{SITE_CONFIG.description}</p>
               {primaryTask ? (
-                <Link href={primaryTask.route} className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#8df0c8] px-4 py-2.5 text-sm font-semibold text-[#07111f] hover:bg-[#77dfb8]">
+                <Link
+                  href={primaryTask.route}
+                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground shadow-[0_8px_24px_oklch(0.5_0.15_28_/_0.35)] transition hover:brightness-110"
+                >
                   Explore {primaryTask.label}
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               ) : null}
             </div>
-            <div className="grid gap-6 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-3">
+            <div className="grid gap-8 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-3">
               <div>
-                <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Surfaces</h3>
-                <ul className="mt-4 space-y-3 text-sm text-slate-200">
+                <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-500">Explore</h3>
+                <ul className="mt-4 space-y-3 text-sm text-zinc-300">
                   {footerLinks.platform.map((item: any) => (
-                    <li key={item.name}><Link href={item.href} className="flex items-center gap-2 hover:text-white">{item.icon ? <item.icon className="h-4 w-4" /> : null}{item.name}</Link></li>
+                    <li key={item.name}>
+                      <Link href={item.href} className="flex items-center gap-2 transition hover:text-white">
+                        {item.icon ? <item.icon className="h-4 w-4 opacity-80" /> : null}
+                        {item.name}
+                      </Link>
+                    </li>
                   ))}
                 </ul>
               </div>
               <div>
-                <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Resources</h3>
-                <ul className="mt-4 space-y-3 text-sm text-slate-200">
+                <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-500">Resources</h3>
+                <ul className="mt-4 space-y-3 text-sm text-zinc-300">
                   {footerLinks.resources.map((item) => (
-                    <li key={item.name}><Link href={item.href} className="hover:text-white">{item.name}</Link></li>
+                    <li key={item.name}>
+                      <Link href={item.href} className="transition hover:text-white">
+                        {item.name}
+                      </Link>
+                    </li>
                   ))}
                 </ul>
               </div>
               <div>
-                <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-400">Connect</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-[0.24em] text-zinc-500">Connect</h3>
                 <div className="mt-4 flex gap-3">
                   {socialLinks.map((item) => (
-                    <Link key={item.name} href={item.href} target="_blank" rel="noopener noreferrer" className="rounded-full border border-white/10 bg-white/8 p-2.5 text-slate-200 hover:bg-white/12 hover:text-white">
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-full border border-white/10 bg-white/[0.06] p-2.5 text-zinc-300 transition hover:border-white/20 hover:bg-white/10 hover:text-white"
+                    >
                       <item.icon className="h-4 w-4" />
                     </Link>
                   ))}
@@ -127,7 +156,9 @@ export function Footer() {
               </div>
             </div>
           </div>
-          <div className="mt-10 border-t border-white/10 pt-5 text-sm text-slate-400">&copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</div>
+          <div className="mt-10 border-t border-white/[0.08] pt-6 text-sm text-zinc-500">
+            &copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.
+          </div>
         </div>
       </footer>
     )

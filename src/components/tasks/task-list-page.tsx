@@ -29,9 +29,9 @@ const variantShells = {
   'article-editorial': 'bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.08),transparent_20%),linear-gradient(180deg,#fff8ef_0%,#ffffff_100%)]',
   'article-journal': 'bg-[linear-gradient(180deg,#fffdf9_0%,#f7f1ea_100%)]',
   'image-masonry': 'bg-[linear-gradient(180deg,#09101d_0%,#111c2f_100%)] text-white',
-  'image-portfolio': 'bg-[linear-gradient(180deg,#07111f_0%,#13203a_100%)] text-white',
+  'image-portfolio': 'bg-background text-foreground',
   'profile-creator': 'bg-[linear-gradient(180deg,#0a1120_0%,#101c34_100%)] text-white',
-  'profile-business': 'bg-[linear-gradient(180deg,#f6fbff_0%,#ffffff_100%)]',
+  'profile-business': 'bg-[linear-gradient(180deg,oklch(0.99_0.004_95)_0%,oklch(1_0_0)_55%,oklch(0.98_0.008_95)_100%)] text-foreground',
   'classified-bulletin': 'bg-[linear-gradient(180deg,#edf3e4_0%,#ffffff_100%)]',
   'classified-market': 'bg-[linear-gradient(180deg,#f4f6ef_0%,#ffffff_100%)]',
   'sbm-curation': 'bg-[linear-gradient(180deg,#fff7ee_0%,#ffffff_100%)]',
@@ -55,7 +55,7 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
   const shellClass = variantShells[layoutKey as keyof typeof variantShells] || 'bg-background'
   const Icon = taskIcons[task] || LayoutGrid
 
-  const isDark = ['image-masonry', 'image-portfolio', 'profile-creator'].includes(layoutKey)
+  const isDark = ['image-masonry', 'profile-creator'].includes(layoutKey)
   const ui = isDark
     ? {
         muted: 'text-slate-300',
@@ -165,18 +165,28 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
         ) : null}
 
         {layoutKey === 'image-masonry' || layoutKey === 'image-portfolio' ? (
-          <section className="mb-12 grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <section className="mb-12 grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
             <div>
-              <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] ${ui.soft}`}>
-                <Icon className="h-3.5 w-3.5" /> Visual feed
+              <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] ${ui.soft}`}>
+                <Icon className="h-3.5 w-3.5" /> Gallery feed
               </div>
-              <h1 className="mt-5 text-5xl font-semibold tracking-[-0.05em]">{taskConfig?.description || 'Latest posts'}</h1>
-              <p className={`mt-5 max-w-2xl text-sm leading-8 ${ui.muted}`}>This surface leans into stronger imagery, larger modules, and more expressive spacing so visual content feels materially different from reading and directory pages.</p>
+              <h1 className="mt-5 text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">{taskConfig?.description || 'Latest posts'}</h1>
+              <p className={`mt-5 max-w-xl text-sm leading-relaxed sm:text-[1.02rem] ${ui.muted}`}>
+                Scroll a masonry wall of work—hover for depth, tap through for full detail. Built for photographers, designers, and visual storytellers.
+              </p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link href="/search" className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold ${ui.button}`}>
+                  Search
+                </Link>
+                <Link href="/profile" className={`inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground shadow-sm hover:bg-muted`}>
+                  Profiles
+                </Link>
+              </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className={`min-h-[220px] rounded-[2rem] ${ui.panel}`} />
-              <div className={`min-h-[220px] rounded-[2rem] ${ui.soft}`} />
-              <div className={`col-span-2 min-h-[120px] rounded-[2rem] ${ui.panel}`} />
+            <div className="grid grid-cols-3 gap-3 sm:gap-4">
+              <div className={`col-span-2 row-span-2 min-h-[200px] rounded-[1.75rem] bg-gradient-to-br from-muted via-background to-muted ${ui.panel}`} />
+              <div className={`min-h-[96px] rounded-[1.25rem] bg-gradient-to-br from-accent/15 to-transparent ${ui.soft}`} />
+              <div className={`min-h-[96px] rounded-[1.25rem] bg-gradient-to-br from-muted to-background ${ui.soft}`} />
             </div>
           </section>
         ) : null}

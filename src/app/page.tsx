@@ -113,14 +113,14 @@ function getEditorialTone() {
 
 function getVisualTone() {
   return {
-    shell: 'bg-[#07101f] text-white',
-    panel: 'border border-white/10 bg-[rgba(11,18,31,0.78)] shadow-[0_28px_80px_rgba(0,0,0,0.35)]',
-    soft: 'border border-white/10 bg-white/6',
-    muted: 'text-slate-300',
-    title: 'text-white',
-    badge: 'bg-[#8df0c8] text-[#07111f]',
-    action: 'bg-[#8df0c8] text-[#07111f] hover:bg-[#77dfb8]',
-    actionAlt: 'border border-white/10 bg-white/6 text-white hover:bg-white/10',
+    shell: 'bg-transparent text-foreground',
+    panel: 'border border-black/[0.06] bg-white shadow-[0_22px_50px_-12px_rgba(15,23,42,0.12)]',
+    soft: 'border border-black/[0.06] bg-muted/60',
+    muted: 'text-muted-foreground',
+    title: 'text-foreground',
+    badge: 'border border-accent/25 bg-accent/10 text-foreground',
+    action: 'bg-foreground text-background shadow-sm transition hover:bg-foreground/90',
+    actionAlt: 'border border-border bg-background text-foreground transition hover:bg-muted',
   }
 }
 
@@ -344,66 +344,118 @@ function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTas
 
 function VisualHome({ primaryTask, imagePosts, profilePosts, articlePosts }: { primaryTask?: EnabledTask; imagePosts: SitePost[]; profilePosts: SitePost[]; articlePosts: SitePost[] }) {
   const tone = getVisualTone()
-  const gallery = imagePosts.length ? imagePosts.slice(0, 5) : articlePosts.slice(0, 5)
-  const creators = profilePosts.slice(0, 3)
+  const feedSource = imagePosts.length ? imagePosts : articlePosts
+  const gallery = feedSource.slice(0, 16)
+  const creators = profilePosts.slice(0, 12)
 
   return (
     <main className={tone.shell}>
-      <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-18">
-        <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr] lg:items-start">
-          <div>
-            <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] ${tone.badge}`}>
-              <ImageIcon className="h-3.5 w-3.5" />
-              Visual publishing system
-            </span>
-            <h1 className={`mt-6 max-w-4xl text-5xl font-semibold tracking-[-0.06em] sm:text-6xl ${tone.title}`}>
-              Image-led discovery with creator profiles and a more gallery-like browsing rhythm.
-            </h1>
-            <p className={`mt-6 max-w-2xl text-base leading-8 ${tone.muted}`}>{SITE_CONFIG.description}</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link href={primaryTask?.route || '/image-sharing'} className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.action}`}>
-                Open gallery
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-              <Link href="/profile" className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold ${tone.actionAlt}`}>
-                Meet creators
-              </Link>
+      <section className="relative overflow-hidden border-b border-border/60">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,oklch(0.92_0.05_28_/_0.25),transparent_55%)]" />
+        <div className="relative mx-auto max-w-[1600px] px-4 pb-12 pt-10 sm:px-6 lg:px-10 lg:pb-16 lg:pt-14">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-2xl">
+              <span className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] ${tone.badge}`}>
+                <ImageIcon className="h-3.5 w-3.5 text-accent" />
+                Discover · Share · Collect
+              </span>
+              <h1 className={`mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.055em] sm:text-5xl lg:text-[3.15rem] lg:leading-[1.08] ${tone.title}`}>
+                A calmer feed for images and the people behind them.
+              </h1>
+              <p className={`mt-5 max-w-xl text-base leading-relaxed sm:text-[1.05rem] ${tone.muted}`}>{SITE_CONFIG.description}</p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <Link
+                  href={primaryTask?.route || '/image-sharing'}
+                  className={`inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold ${tone.action}`}
+                >
+                  Browse images
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <Link href="/profile" className={`inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold ${tone.actionAlt}`}>
+                  Creator profiles
+                </Link>
+                <Link
+                  href="/search"
+                  className="inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-medium text-muted-foreground underline-offset-4 transition hover:text-foreground"
+                >
+                  Search
+                </Link>
+              </div>
             </div>
-          </div>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
-            {gallery.slice(0, 5).map((post, index) => (
-              <Link
-                key={post.id}
-                href={getTaskHref(resolveTaskKey(post.task, 'image'), post.slug)}
-                className={index === 0 ? `col-span-2 row-span-2 overflow-hidden rounded-[2.4rem] ${tone.panel}` : `overflow-hidden rounded-[1.8rem] ${tone.soft}`}
-              >
-                <div className={index === 0 ? 'relative h-[360px]' : 'relative h-[170px]'}>
-                  <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-12 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
-          <div className={`rounded-[2rem] p-7 ${tone.panel}`}>
-            <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Visual notes</p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">Larger media surfaces, fewer boxes, stronger pacing.</h2>
-            <p className={`mt-4 max-w-2xl text-sm leading-8 ${tone.muted}`}>This product avoids business-directory density and publication framing. The homepage behaves more like a visual board, with profile surfaces and imagery leading the experience.</p>
-          </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            {creators.map((post) => (
-              <Link key={post.id} href={`/profile/${post.slug}`} className={`rounded-[1.8rem] p-5 ${tone.soft}`}>
-                <div className="relative h-40 overflow-hidden rounded-[1.2rem]">
-                  <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
-                </div>
-                <h3 className="mt-4 text-lg font-semibold">{post.title}</h3>
-                <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>{post.summary || 'Creator profile and visual identity surface.'}</p>
-              </Link>
-            ))}
           </div>
         </div>
       </section>
+
+      <section className="mx-auto max-w-[1600px] px-4 py-10 sm:px-6 lg:px-10">
+        <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">For you</p>
+            <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground sm:text-3xl">Keep scrolling</h2>
+            <p className="mt-1 max-w-lg text-sm text-muted-foreground">Tap any tile to open the full piece. Layout adapts like a gallery wall.</p>
+          </div>
+        </div>
+
+        <div className="gallery-masonry">
+          {gallery.map((post, index) => {
+            const aspect =
+              index % 5 === 0 ? 'aspect-[3/4]' : index % 5 === 1 ? 'aspect-square' : index % 5 === 2 ? 'aspect-[4/5]' : index % 5 === 3 ? 'aspect-[5/6]' : 'aspect-[3/4]'
+            return (
+              <Link
+                key={post.id}
+                href={getTaskHref(resolveTaskKey(post.task, 'image'), post.slug)}
+                className={`group block overflow-hidden rounded-[1.35rem] ${tone.panel}`}
+              >
+                <div className={`relative w-full ${aspect} overflow-hidden bg-muted`}>
+                  <ContentImage
+                    src={getPostImage(post)}
+                    alt={post.title}
+                    fill
+                    className="object-cover transition duration-500 ease-out group-hover:scale-[1.05]"
+                    sizes="(max-width: 640px) 45vw, (max-width: 1024px) 30vw, 22vw"
+                  />
+                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/5 to-transparent opacity-90 transition duration-300 group-hover:opacity-100" />
+                  <div className="absolute inset-x-0 bottom-0 p-4">
+                    <p className="line-clamp-2 text-sm font-medium text-white drop-shadow-sm">{post.title}</p>
+                  </div>
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+      </section>
+
+      {creators.length ? (
+        <section className="border-t border-border/60 bg-muted/30">
+          <div className="mx-auto max-w-[1600px] px-4 py-12 sm:px-6 lg:px-10">
+            <div className="mb-6 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Creators</p>
+                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">Profiles worth visiting</h2>
+              </div>
+              <Link href="/profile" className="hidden text-sm font-semibold text-foreground underline-offset-4 hover:underline sm:inline">
+                See all
+              </Link>
+            </div>
+            <div className="-mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 pt-1 [scrollbar-width:thin]">
+              {creators.map((post) => (
+                <Link
+                  key={post.id}
+                  href={`/profile/${post.slug}`}
+                  className={`min-w-[220px] max-w-[260px] shrink-0 snap-start overflow-hidden rounded-[1.5rem] ${tone.panel} transition duration-300 hover:-translate-y-0.5 hover:shadow-lg`}
+                >
+                  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                    <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" sizes="260px" />
+                  </div>
+                  <div className="p-4">
+                    <p className="font-semibold leading-snug text-foreground">{post.title}</p>
+                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{post.summary || 'Creator on the platform.'}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
     </main>
   )
 }
