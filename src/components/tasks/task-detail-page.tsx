@@ -242,16 +242,26 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
     );
   }
 
+  const isVisualGallery = productKind === "visual" && task === "image";
+
   return (
     <div className="min-h-screen bg-background">
       <NavbarShell />
-      <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <main
+        className={cn(
+          "mx-auto px-4 py-10 sm:px-6 lg:px-8",
+          isVisualGallery ? "max-w-[1400px]" : "max-w-7xl"
+        )}
+      >
         <SchemaJsonLd data={schemaPayload} />
         <Link
           href={taskConfig?.route || "/"}
-          className="mb-6 inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
+          className={cn(
+            "mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground",
+            isVisualGallery && "rounded-full border border-border bg-muted/40 px-4 py-2"
+          )}
         >
-          ← Back to {taskConfig?.label || "posts"}
+          <span aria-hidden>←</span> Back to {taskConfig?.label || "posts"}
         </Link>
 
         <div

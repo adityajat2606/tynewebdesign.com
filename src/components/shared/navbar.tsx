@@ -4,13 +4,33 @@ import { useMemo, useState } from 'react'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Search, Menu, X, User, FileText, Building2, LayoutGrid, Tag, Image as ImageIcon, ChevronRight, Sparkles, MapPin, Plus } from 'lucide-react'
+import {
+  Search,
+  Menu,
+  X,
+  User,
+  FileText,
+  Building2,
+  LayoutGrid,
+  Tag,
+  Image as ImageIcon,
+  ChevronRight,
+  ChevronLeft,
+  Sparkles,
+  MapPin,
+  Plus,
+  Home,
+  type LucideIcon,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/lib/auth-context'
 import { SITE_CONFIG, type TaskKey } from '@/lib/site-config'
 import { cn } from '@/lib/utils'
 import { siteContent } from '@/config/site.content'
 import { getFactoryState } from '@/design/factory/get-factory-state'
+import { getProductKind } from '@/design/factory/get-product-kind'
+import { useVisualSidebar } from '@/components/shared/visual-sidebar-context'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 const NavbarAuthControls = dynamic(() => import('@/components/shared/navbar-auth-controls').then((mod) => mod.NavbarAuthControls), {
   ssr: false,
@@ -48,12 +68,12 @@ const variantClasses = {
     mobile: 'border-t border-[#dbc6b6] bg-[#fff7ee]',
   },
   'floating-bar': {
-    shell: 'border-b border-transparent bg-transparent text-white',
-    logo: 'rounded-[1.35rem] border border-white/12 bg-white/8 shadow-[0_16px_48px_rgba(15,23,42,0.22)] backdrop-blur',
-    active: 'bg-[#8df0c8] text-[#07111f]',
-    idle: 'text-slate-200 hover:bg-white/10 hover:text-white',
-    cta: 'rounded-full bg-[#8df0c8] text-[#07111f] hover:bg-[#77dfb8]',
-    mobile: 'border-t border-white/10 bg-[#09101d]/96',
+    shell: 'border-b border-black/[0.06] bg-white/80 text-foreground shadow-[0_1px_0_rgba(15,23,42,0.04)] backdrop-blur-xl supports-[backdrop-filter]:bg-white/70',
+    logo: 'rounded-[1.35rem] border border-black/[0.06] bg-white shadow-[0_12px_40px_rgba(15,23,42,0.08)]',
+    active: 'bg-foreground text-background shadow-sm',
+    idle: 'text-muted-foreground hover:bg-muted hover:text-foreground',
+    cta: 'rounded-full bg-foreground text-background hover:bg-foreground/90',
+    mobile: 'border-t border-black/[0.06] bg-white/95 backdrop-blur-xl',
   },
   'utility-bar': {
     shell: 'border-b border-[#d7deca] bg-[#f4f6ef]/94 text-[#1f2617] backdrop-blur-xl',
@@ -91,13 +111,21 @@ export function Navbar() {
   const pathname = usePathname()
   const { isAuthenticated } = useAuth()
   const { recipe } = getFactoryState()
+  const productKind = getProductKind(recipe)
+  const { collapsed, toggle } = useVisualSidebar()
 
-  const navigation = useMemo(() => SITE_CONFIG.tasks.filter((task) => task.enabled && task.key !== 'profile'), [])
+  const navigation = useMemo(() => {
+    if (productKind === 'visual') {
+      return SITE_CONFIG.tasks.filter((task) => task.enabled && (task.key === 'image' || task.key === 'profile'))
+    }
+    return SITE_CONFIG.tasks.filter((task) => task.enabled && task.key !== 'profile')
+  }, [productKind])
   const primaryNavigation = navigation.slice(0, 5)
   const mobileNavigation = navigation.map((task) => ({
     name: task.label,
     href: task.route,
     icon: taskIcons[task.key] || LayoutGrid,
+    contentType: task.contentType,
   }))
   const primaryTask = SITE_CONFIG.tasks.find((task) => task.key === recipe.primaryTask && task.enabled) || primaryNavigation[0]
   const isDirectoryProduct = recipe.homeLayout === 'listing-home' || recipe.homeLayout === 'classified-home'
@@ -192,6 +220,262 @@ export function Navbar() {
           </div>
         )}
       </header>
+    )
+  }
+
+  if (productKind === 'visual') {
+    const sidebarLinkClass = (active: boolean) =>
+      cn(
+        'flex items-center rounded-xl py-2.5 text-sm font-medium transition-colors',
+        collapsed ? 'justify-center px-2' : 'gap-3 px-3',
+        active ? 'bg-white/12 text-white' : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-100'
+      )
+
+    const NavRow = ({
+      href,
+      active,
+      icon: Icon,
+      label,
+      contentType,
+    }: {
+      href: string
+      active: boolean
+      icon: LucideIcon
+      label: string
+      contentType?: string
+    }) => {
+      const link = (
+        <Link
+          href={href}
+          className={sidebarLinkClass(active)}
+          aria-current={active ? 'page' : undefined}
+          {...(contentType ? { 'data-content-type': contentType } : {})}
+        >
+          <Icon className="h-5 w-5 shrink-0 opacity-90" aria-hidden />
+          {!collapsed && <span className="truncate">{label}</span>}
+          {collapsed && <span className="sr-only">{label}</span>}
+        </Link>
+      )
+      if (!collapsed) return link
+      return (
+        <Tooltip>
+          <TooltipTrigger asChild>{link}</TooltipTrigger>
+          <TooltipContent side="right" sideOffset={10} className="border-white/10 bg-zinc-900 font-medium text-zinc-100">
+            {label}
+          </TooltipContent>
+        </Tooltip>
+      )
+    }
+
+    return (
+      <TooltipProvider delayDuration={200}>
+        <>
+          <aside
+            className="fixed left-0 top-0 z-50 hidden h-screen w-[var(--visual-sidebar-w)] flex-col overflow-hidden border-r border-white/10 bg-zinc-950/98 shadow-[1px_0_0_rgba(0,0,0,0.35)] backdrop-blur-xl transition-[width] duration-200 ease-out lg:flex"
+            data-visual-sidebar="true"
+          >
+            <div className={cn('flex h-full flex-col pb-6 pt-8', collapsed ? 'px-2' : 'px-4')}>
+              <Link
+                href="/"
+                className={cn('flex items-center gap-3', collapsed ? 'justify-center px-0' : 'px-2')}
+                data-content-type="home"
+              >
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-1.5 shadow-inner">
+                  <img src="/favicon.png?v=20260401" alt="" width="44" height="44" className="h-full w-full object-contain" />
+                </div>
+                {!collapsed && (
+                  <div className="min-w-0">
+                    <span className="block truncate text-base font-semibold tracking-tight text-white">{SITE_CONFIG.name}</span>
+                    <span className="block truncate text-[10px] uppercase tracking-[0.22em] text-zinc-500">{siteContent.navbar.tagline}</span>
+                  </div>
+                )}
+              </Link>
+
+              <nav className="mt-10 flex flex-1 flex-col gap-1" aria-label="Primary">
+                <NavRow href="/" active={pathname === '/'} icon={Home} label="Home" contentType="home" />
+                {primaryNavigation.map((task) => {
+                  const Icon = taskIcons[task.key] || LayoutGrid
+                  const isActive = pathname.startsWith(task.route)
+                  return (
+                    <NavRow
+                      key={task.key}
+                      href={task.route}
+                      active={isActive}
+                      icon={Icon}
+                      label={task.label}
+                      contentType={task.contentType}
+                    />
+                  )
+                })}
+                <NavRow href="/search" active={pathname.startsWith('/search')} icon={Search} label="Search" contentType="search" />
+              </nav>
+
+              <div className="mt-auto space-y-3 border-t border-white/10 pt-6">
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={toggle}
+                  className={cn(
+                    'w-full border-white/15 bg-white/5 text-zinc-200 shadow-none hover:bg-white/10 hover:text-white',
+                    collapsed ? 'justify-center px-0' : 'justify-between gap-2'
+                  )}
+                  aria-expanded={!collapsed}
+                  aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+                >
+                  {collapsed ? (
+                    <ChevronRight className="h-4 w-4 shrink-0" />
+                  ) : (
+                    <>
+                      <span className="text-xs font-semibold uppercase tracking-[0.14em]">Collapse</span>
+                      <ChevronLeft className="h-4 w-4 shrink-0" />
+                    </>
+                  )}
+                </Button>
+
+                {primaryTask ? (
+                  collapsed ? (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          href={primaryTask.route}
+                          className="flex items-center justify-center rounded-xl border border-white/12 bg-white/5 py-2.5 text-zinc-100 transition hover:bg-white/10"
+                          data-content-type={primaryTask.contentType}
+                        >
+                          <Sparkles className="h-4 w-4 text-amber-400" />
+                          <span className="sr-only">{primaryTask.label}</span>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" sideOffset={10} className="border-white/10 bg-zinc-900 text-zinc-100">
+                        {primaryTask.label}
+                      </TooltipContent>
+                    </Tooltip>
+                  ) : (
+                    <Link
+                      href={primaryTask.route}
+                      className="flex items-center gap-2 rounded-xl border border-white/12 bg-white/5 px-3 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-zinc-200 transition hover:bg-white/10"
+                      data-content-type={primaryTask.contentType}
+                    >
+                      <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+                      {primaryTask.label}
+                    </Link>
+                  )
+                ) : null}
+                {isAuthenticated ? (
+                  <NavbarAuthControls />
+                ) : collapsed ? (
+                  <div className="flex flex-col gap-2">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-10 w-full rounded-xl text-zinc-400 hover:bg-white/10 hover:text-zinc-100" asChild>
+                          <Link href="/login" data-content-type="auth">
+                            <User className="h-4 w-4" />
+                            <span className="sr-only">Sign in</span>
+                          </Link>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" sideOffset={10} className="border-white/10 bg-zinc-900 text-zinc-100">
+                        Sign in
+                      </TooltipContent>
+                    </Tooltip>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button size="icon" className="h-10 w-full rounded-xl bg-white text-zinc-950 hover:bg-zinc-100" asChild>
+                          <Link href="/register" data-content-type="auth">
+                            <Plus className="h-4 w-4" />
+                            <span className="sr-only">Join</span>
+                          </Link>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent side="right" sideOffset={10} className="border-white/10 bg-zinc-900 text-zinc-100">
+                        Join
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
+                ) : (
+                  <div className="grid gap-2">
+                    <Button variant="ghost" size="sm" asChild className="justify-start rounded-xl text-zinc-400 hover:bg-white/10 hover:text-zinc-100">
+                      <Link href="/login" data-content-type="auth">
+                        Sign in
+                      </Link>
+                    </Button>
+                    <Button size="sm" asChild className="rounded-xl bg-white text-zinc-950 hover:bg-zinc-100">
+                      <Link href="/register" data-content-type="auth">
+                        Join
+                      </Link>
+                    </Button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </aside>
+
+          <header className="sticky top-0 z-50 flex h-14 items-center justify-between gap-3 border-b border-white/10 bg-zinc-950/95 px-4 backdrop-blur-xl lg:hidden">
+            <Link href="/" className="flex min-w-0 items-center gap-2" data-content-type="home">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/5 p-1 shadow-inner">
+                <img src="/favicon.png?v=20260401" alt="" width="36" height="36" className="h-full w-full object-contain" />
+              </div>
+              <span className="truncate text-sm font-semibold text-white">{SITE_CONFIG.name}</span>
+            </Link>
+            <div className="flex items-center gap-1">
+              <Button variant="ghost" size="icon" asChild className="text-zinc-400 hover:bg-white/10 hover:text-white">
+                <Link href="/search" data-content-type="search">
+                  <Search className="h-5 w-5" />
+                  <span className="sr-only">Search</span>
+                </Link>
+              </Button>
+              <Button variant="ghost" size="icon" className="text-zinc-400 hover:bg-white/10 hover:text-white" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+                {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </Button>
+            </div>
+          </header>
+
+          {isMobileMenuOpen && (
+            <div className="border-b border-white/10 bg-zinc-950 lg:hidden">
+              <div className="space-y-1 px-4 py-4">
+                <Link
+                  href="/"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-100"
+                  data-content-type="home"
+                  aria-current={pathname === '/' ? 'page' : undefined}
+                >
+                  <Home className="h-5 w-5" />
+                  Home
+                </Link>
+                {mobileNavigation.map((item) => {
+                  const isActive = pathname.startsWith(item.href)
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      className={cn(
+                        'flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium',
+                        isActive ? 'bg-white/12 text-white' : 'text-zinc-400 hover:bg-white/5 hover:text-zinc-100'
+                      )}
+                      data-content-type={item.contentType}
+                      aria-current={isActive ? 'page' : undefined}
+                    >
+                      <item.icon className="h-5 w-5" />
+                      {item.name}
+                    </Link>
+                  )
+                })}
+                <Link
+                  href="/search"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-3 rounded-xl px-3 py-3 text-sm font-medium text-zinc-400"
+                  data-content-type="search"
+                >
+                  <Search className="h-5 w-5" />
+                  Search
+                </Link>
+              </div>
+            </div>
+          )}
+        </>
+      </TooltipProvider>
     )
   }
 
@@ -303,9 +587,12 @@ export function Navbar() {
 
       {isFloating && primaryTask ? (
         <div className="mx-auto hidden max-w-7xl px-4 pb-3 sm:px-6 lg:block lg:px-8">
-          <Link href={primaryTask.route} className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-200 backdrop-blur hover:bg-white/12">
+          <Link
+            href={primaryTask.route}
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-muted/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground shadow-sm transition hover:border-foreground/10 hover:bg-muted"
+          >
             Featured surface
-            <span>{primaryTask.label}</span>
+            <span className="text-foreground">{primaryTask.label}</span>
             <ChevronRight className="h-3.5 w-3.5" />
           </Link>
         </div>
@@ -321,7 +608,14 @@ export function Navbar() {
             {mobileNavigation.map((item) => {
               const isActive = pathname.startsWith(item.href)
               return (
-                <Link key={item.name} href={item.href} onClick={() => setIsMobileMenuOpen(false)} className={cn('flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition-colors', isActive ? style.active : style.idle)}>
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className={cn('flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-semibold transition-colors', isActive ? style.active : style.idle)}
+                  data-content-type={item.contentType}
+                  aria-current={isActive ? 'page' : undefined}
+                >
                   <item.icon className="h-5 w-5" />
                   {item.name}
                 </Link>
