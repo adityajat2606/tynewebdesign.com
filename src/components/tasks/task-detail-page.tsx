@@ -15,6 +15,9 @@ import { cn } from "@/lib/utils";
 import { ArticleComments } from "@/components/tasks/article-comments";
 import { SchemaJsonLd } from "@/components/seo/schema-jsonld";
 import { RichContent, formatRichHtml } from "@/components/shared/rich-content";
+import { getFactoryState } from "@/design/factory/get-factory-state";
+import { getProductKind } from "@/design/factory/get-product-kind";
+import { DirectoryTaskDetailPage } from "@/design/products/directory/task-detail-page";
 
 type PostContent = {
   category?: string;
@@ -216,17 +219,49 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
     ],
   };
   const schemaPayload = articleSchema ? [articleSchema, breadcrumbSchema] : breadcrumbSchema;
+  const { recipe } = getFactoryState();
+  const productKind = getProductKind(recipe);
+
+  if (productKind === "directory" && (task === "listing" || task === "classified" || task === "profile")) {
+    return (
+      <div className="min-h-screen bg-[#f8fbff]">
+        <NavbarShell />
+        <DirectoryTaskDetailPage
+          task={task}
+          taskLabel={taskConfig?.label || task}
+          taskRoute={taskConfig?.route || "/"}
+          post={post}
+          description={description}
+          category={category}
+          images={images}
+          mapEmbedUrl={mapEmbedUrl}
+          related={related}
+        />
+        <Footer />
+      </div>
+    );
+  }
+
+  const isVisualGallery = productKind === "visual" && task === "image";
 
   return (
     <div className="min-h-screen bg-background">
       <NavbarShell />
-      <main className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
+      <main
+        className={cn(
+          "mx-auto px-4 py-10 sm:px-6 lg:px-8",
+          isVisualGallery ? "max-w-[1400px]" : "max-w-7xl"
+        )}
+      >
         <SchemaJsonLd data={schemaPayload} />
         <Link
           href={taskConfig?.route || "/"}
-          className="mb-6 inline-flex items-center text-sm text-muted-foreground hover:text-foreground"
+          className={cn(
+            "mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition hover:text-foreground",
+            isVisualGallery && "rounded-full border border-border bg-muted/40 px-4 py-2"
+          )}
         >
-          ← Back to {taskConfig?.label || "posts"}
+          <span aria-hidden>←</span> Back to {taskConfig?.label || "posts"}
         </Link>
 
         <div

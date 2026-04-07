@@ -30,7 +30,7 @@ export function TaskImageCarousel({ images }: { images: string[] }) {
   if (!images.length) return null;
 
   return (
-    <div className="relative overflow-hidden rounded-3xl border border-border bg-muted">
+    <div className="relative overflow-hidden rounded-[1.75rem] border border-black/[0.06] bg-muted shadow-[0_24px_60px_-20px_rgba(15,23,42,0.15)]">
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {images.map((src, index) => (
