@@ -1,5 +1,19 @@
 import Link from 'next/link'
-import { ArrowRight, Building2, FileText, Image as ImageIcon, LayoutGrid, Tag, User } from 'lucide-react'
+import {
+  ArrowRight,
+  Building2,
+  FileText,
+  Image as ImageIcon,
+  LayoutGrid,
+  MessageCircle,
+  Palette,
+  Shield,
+  Sparkles,
+  Tag,
+  User,
+  Users,
+  Zap,
+} from 'lucide-react'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
 import { TaskListClient } from '@/components/tasks/task-list-client'
@@ -29,13 +43,14 @@ const variantShells = {
   'article-editorial': 'bg-[radial-gradient(circle_at_top_left,rgba(251,191,36,0.08),transparent_20%),linear-gradient(180deg,#fff8ef_0%,#ffffff_100%)]',
   'article-journal': 'bg-[linear-gradient(180deg,#fffdf9_0%,#f7f1ea_100%)]',
   'image-masonry': 'bg-[linear-gradient(180deg,#09101d_0%,#111c2f_100%)] text-white',
-  'image-portfolio': 'bg-background text-foreground',
+  'image-portfolio': 'bg-transparent text-foreground',
   'profile-creator': 'bg-[linear-gradient(180deg,#0a1120_0%,#101c34_100%)] text-white',
-  'profile-business': 'bg-[linear-gradient(180deg,oklch(0.99_0.004_95)_0%,oklch(1_0_0)_55%,oklch(0.98_0.008_95)_100%)] text-foreground',
+  'profile-business': 'bg-transparent text-foreground',
   'classified-bulletin': 'bg-[linear-gradient(180deg,#edf3e4_0%,#ffffff_100%)]',
   'classified-market': 'bg-[linear-gradient(180deg,#f4f6ef_0%,#ffffff_100%)]',
   'sbm-curation': 'bg-[linear-gradient(180deg,#fff7ee_0%,#ffffff_100%)]',
   'sbm-library': 'bg-[linear-gradient(180deg,#f7f8fc_0%,#ffffff_100%)]',
+  'social-editorial': 'bg-transparent text-foreground',
 } as const
 
 export async function TaskListPage({ task, category }: { task: TaskKey; category?: string }) {
@@ -165,40 +180,167 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
         ) : null}
 
         {layoutKey === 'image-masonry' || layoutKey === 'image-portfolio' ? (
-          <section className="mb-12 grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
-            <div>
-              <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] ${ui.soft}`}>
-                <Icon className="h-3.5 w-3.5" /> Gallery feed
+          <section className="mb-14">
+            <div className="grid gap-10 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
+              <div>
+                <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] ${ui.soft}`}>
+                  <Icon className="h-3.5 w-3.5" /> Image sharing
+                </div>
+                <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">
+                  {taskConfig?.description || 'A calmer gallery for work that deserves the spotlight.'}
+                </h1>
+                <p className={`mt-5 max-w-xl text-sm leading-relaxed sm:text-[1.05rem] ${ui.muted}`}>
+                  Browse a masonry-style wall of visual posts—each tile opens into the full story. Built for photographers, designers, and teams who want discovery to feel intentional, not algorithmic.
+                </p>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <Link href="/search" className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold shadow-[0_8px_24px_oklch(0.5_0.15_28_/_0.12)] ${ui.button}`}>
+                    Search the gallery
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                  <Link
+                    href="/profile"
+                    className={`inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground transition hover:bg-muted`}
+                  >
+                    Creator profiles
+                  </Link>
+                </div>
+                <dl className="mt-10 grid gap-4 sm:grid-cols-3">
+                  {[
+                    { k: 'Layout', v: 'Masonry grid', icon: Palette },
+                    { k: 'Focus', v: 'Visual-first posts', icon: Sparkles },
+                    { k: 'Trust', v: 'Linked to profiles', icon: Shield },
+                  ].map(({ k, v, icon: Glyph }) => (
+                    <div key={k} className={`rounded-2xl px-4 py-3 ${ui.soft}`}>
+                      <dt className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.18em] opacity-70">
+                        <Glyph className="h-3.5 w-3.5" /> {k}
+                      </dt>
+                      <dd className="mt-1.5 text-sm font-semibold text-foreground">{v}</dd>
+                    </div>
+                  ))}
+                </dl>
               </div>
-              <h1 className="mt-5 text-4xl font-semibold tracking-[-0.05em] sm:text-5xl">{taskConfig?.description || 'Latest posts'}</h1>
-              <p className={`mt-5 max-w-xl text-sm leading-relaxed sm:text-[1.02rem] ${ui.muted}`}>
-                Scroll a masonry wall of work—hover for depth, tap through for full detail. Built for photographers, designers, and visual storytellers.
-              </p>
-              <div className="mt-8 flex flex-wrap gap-3">
-                <Link href="/search" className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold ${ui.button}`}>
-                  Search
-                </Link>
-                <Link href="/profile" className={`inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground shadow-sm hover:bg-muted`}>
-                  Profiles
-                </Link>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className={`sm:col-span-2 rounded-[1.75rem] border border-border bg-gradient-to-br from-accent/10 via-card to-muted/40 p-6 shadow-[var(--gallery-shadow-soft)] ${ui.panel}`}>
+                  <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">How to use this page</p>
+                  <ul className={`mt-4 space-y-3 text-sm leading-relaxed ${ui.muted}`}>
+                    <li className="flex gap-2">
+                      <Zap className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                      Scroll the wall—tiles scale to fit so every series keeps its natural rhythm.
+                    </li>
+                    <li className="flex gap-2">
+                      <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+                      Open any post for full detail, credits, and related work from the same creator.
+                    </li>
+                  </ul>
+                </div>
+                <div className={`rounded-[1.5rem] p-5 ${ui.soft}`}>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] opacity-70">For teams</p>
+                  <p className="mt-2 text-sm font-medium text-foreground">Pair galleries with public profiles so clients see both the work and the people behind it.</p>
+                </div>
+                <div className={`rounded-[1.5rem] p-5 ${ui.soft}`}>
+                  <p className="text-xs font-semibold uppercase tracking-[0.2em] opacity-70">For visitors</p>
+                  <p className="mt-2 text-sm font-medium text-foreground">Use search to jump to a topic, then explore visually without wading through unrelated posts.</p>
+                </div>
               </div>
-            </div>
-            <div className="grid grid-cols-3 gap-3 sm:gap-4">
-              <div className={`col-span-2 row-span-2 min-h-[200px] rounded-[1.75rem] bg-gradient-to-br from-muted via-background to-muted ${ui.panel}`} />
-              <div className={`min-h-[96px] rounded-[1.25rem] bg-gradient-to-br from-accent/15 to-transparent ${ui.soft}`} />
-              <div className={`min-h-[96px] rounded-[1.25rem] bg-gradient-to-br from-muted to-background ${ui.soft}`} />
             </div>
           </section>
         ) : null}
 
         {layoutKey === 'profile-creator' || layoutKey === 'profile-business' ? (
-          <section className={`mb-12 rounded-[2.2rem] p-8 shadow-[0_24px_70px_rgba(15,23,42,0.1)] ${ui.panel}`}>
-            <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-              <div className={`min-h-[240px] rounded-[2rem] ${ui.soft}`} />
-              <div>
-                <p className={`text-xs uppercase tracking-[0.3em] ${ui.muted}`}>{taskConfig?.label || task}</p>
-                <h1 className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-foreground">Profiles with stronger identity, trust, and reputation cues.</h1>
-                <p className={`mt-5 max-w-2xl text-sm leading-8 ${ui.muted}`}>This layout prioritizes the person or business surface first, then lets the feed continue below without borrowing the same visual logic used by articles or listings.</p>
+          <section className="mb-14">
+            <div className={`overflow-hidden rounded-[2.25rem] border border-border shadow-[var(--gallery-shadow)] ${ui.panel}`}>
+              <div className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]">
+                <div className="relative min-h-[280px] bg-gradient-to-br from-accent/15 via-muted/50 to-background p-8 lg:min-h-[320px]">
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_30%_20%,oklch(0.85_0.12_28_/_0.35),transparent_65%)]" />
+                  <div className="relative flex h-full flex-col justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-border bg-card shadow-sm">
+                        <User className="h-7 w-7 text-accent" />
+                      </div>
+                      <div>
+                        <p className={`text-xs font-semibold uppercase tracking-[0.28em] ${ui.muted}`}>{taskConfig?.label || 'Profiles'}</p>
+                        <p className="text-sm font-medium text-foreground">Public identity pages</p>
+                      </div>
+                    </div>
+                    <div className="mt-8 space-y-3">
+                      {['Verified-style cues', 'Clear roles & focus areas', 'Natural links to image work'].map((line) => (
+                        <div key={line} className={`flex items-center gap-2 rounded-xl px-3 py-2 text-sm ${ui.soft}`}>
+                          <Shield className="h-4 w-4 shrink-0 text-accent" />
+                          <span className="text-foreground">{line}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="p-8 lg:p-10">
+                  <h1 className="text-4xl font-semibold tracking-[-0.05em] text-foreground sm:text-[2.65rem] sm:leading-[1.12]">
+                    Profiles that put people and brands before the algorithm.
+                  </h1>
+                  <p className={`mt-5 max-w-xl text-sm leading-relaxed sm:text-[1.02rem] ${ui.muted}`}>
+                    Every profile is a trust anchor: who you are, what you ship, and how to go deeper into galleries and posts. The list below keeps the same calm rhythm as the home page—readable, scannable, and built for decisions.
+                  </p>
+                  <div className="mt-8 flex flex-wrap gap-3">
+                    <Link href="/image-sharing" className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold ${ui.button}`}>
+                      Browse image sharing
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                    <Link href="/search" className={`inline-flex items-center gap-2 rounded-full border border-border bg-card px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-muted`}>
+                      Search
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        {layoutKey === 'social-editorial' ? (
+          <section className="mb-14">
+            <div className="relative overflow-hidden rounded-[2.25rem] border border-border bg-card/80 p-8 shadow-[var(--gallery-shadow-soft)] backdrop-blur-sm sm:p-10">
+              <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-accent/10 blur-3xl" />
+              <div className="relative grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+                <div>
+                  <div className={`inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] ${ui.soft}`}>
+                    <Users className="h-3.5 w-3.5" /> Community
+                  </div>
+                  <h1 className="mt-5 text-4xl font-semibold tracking-[-0.05em] text-foreground sm:text-5xl">
+                    Short updates, announcements, and signals from the people you follow.
+                  </h1>
+                  <p className={`mt-5 max-w-xl text-sm leading-relaxed sm:text-[1.02rem] ${ui.muted}`}>
+                    The community feed is built for quick scanning—perfect for release notes, behind-the-scenes notes, and lightweight conversation that still points to galleries and profiles when you want more depth.
+                  </p>
+                  <div className="mt-8 flex flex-wrap gap-3">
+                    <Link href="/image-sharing" className={`inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold ${ui.button}`}>
+                      Explore image sharing
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                    <Link href="/help" className={`inline-flex items-center gap-2 rounded-full border border-border bg-background px-5 py-2.5 text-sm font-semibold text-foreground hover:bg-muted`}>
+                      Help center
+                    </Link>
+                  </div>
+                </div>
+                <div className="grid gap-4">
+                  {[
+                    { t: 'Stay in the loop', d: 'See what creators and teams publish without leaving the same visual system as the rest of the site.', icon: Zap },
+                    { t: 'Go deeper anytime', d: 'Jump from a short update into profiles or image posts when you need the full context.', icon: MessageCircle },
+                    { t: 'Built for clarity', d: 'Fewer noisy cards, clearer timestamps, and room for substance in every line.', icon: Sparkles },
+                  ].map((item) => {
+                    const ItemIcon = item.icon
+                    return (
+                    <div key={item.t} className={`rounded-2xl border border-border p-5 ${ui.soft}`}>
+                      <div className="flex items-start gap-3">
+                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl border border-border bg-card">
+                          <ItemIcon className="h-5 w-5 text-accent" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-foreground">{item.t}</p>
+                          <p className={`mt-1 text-sm leading-relaxed ${ui.muted}`}>{item.d}</p>
+                        </div>
+                      </div>
+                    </div>
+                    )
+                  })}
+                </div>
               </div>
             </div>
           </section>
@@ -242,7 +384,10 @@ export async function TaskListPage({ task, category }: { task: TaskKey; category
           </section>
         ) : null}
 
-        {intro ? (
+        {intro &&
+        layoutKey !== 'image-portfolio' &&
+        layoutKey !== 'profile-business' &&
+        layoutKey !== 'social-editorial' ? (
           <section className={`mb-12 rounded-[2rem] p-6 shadow-[0_18px_50px_rgba(15,23,42,0.06)] sm:p-8 ${ui.panel}`}>
             <h2 className="text-2xl font-semibold text-foreground">{intro.title}</h2>
             {intro.paragraphs.map((paragraph) => (

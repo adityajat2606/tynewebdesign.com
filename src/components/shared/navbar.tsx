@@ -139,7 +139,7 @@ export function Navbar() {
           <div className="flex min-w-0 items-center gap-4">
             <Link href="/" className="flex shrink-0 items-center gap-3">
               <div className={cn('flex h-12 w-12 items-center justify-center overflow-hidden p-1.5', palette.logo)}>
-                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+                <img src="/favicon.png?v=20260414" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
               </div>
               <div className="min-w-0 hidden sm:block">
                 <span className="block truncate text-xl font-semibold">{SITE_CONFIG.name}</span>
@@ -281,7 +281,7 @@ export function Navbar() {
                 data-content-type="home"
               >
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-1.5 shadow-inner">
-                  <img src="/favicon.png?v=20260401" alt="" width="44" height="44" className="h-full w-full object-contain" />
+                  <img src="/favicon.png?v=20260414" alt="" width="44" height="44" className="h-full w-full object-contain" />
                 </div>
                 {!collapsed && (
                   <div className="min-w-0">
@@ -362,7 +362,7 @@ export function Navbar() {
                   )
                 ) : null}
                 {isAuthenticated ? (
-                  <NavbarAuthControls />
+                  <NavbarAuthControls hideNotifications />
                 ) : collapsed ? (
                   <div className="flex flex-col gap-2">
                     <Tooltip>
@@ -413,7 +413,7 @@ export function Navbar() {
           <header className="sticky top-0 z-50 flex h-14 items-center justify-between gap-3 border-b border-white/10 bg-zinc-950/95 px-4 backdrop-blur-xl lg:hidden">
             <Link href="/" className="flex min-w-0 items-center gap-2" data-content-type="home">
               <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/5 p-1 shadow-inner">
-                <img src="/favicon.png?v=20260401" alt="" width="36" height="36" className="h-full w-full object-contain" />
+                <img src="/favicon.png?v=20260414" alt="" width="36" height="36" className="h-full w-full object-contain" />
               </div>
               <span className="truncate text-sm font-semibold text-white">{SITE_CONFIG.name}</span>
             </Link>
@@ -490,7 +490,7 @@ export function Navbar() {
         <div className="flex min-w-0 flex-1 items-center gap-4 lg:gap-7">
           <Link href="/" className="flex shrink-0 items-center gap-3 whitespace-nowrap pr-2">
             <div className={cn('flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden p-1.5', style.logo)}>
-              <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+              <img src="/favicon.png?v=20260414" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
             </div>
             <div className="min-w-0 hidden sm:block">
               <span className="block truncate text-xl font-semibold">{SITE_CONFIG.name}</span>

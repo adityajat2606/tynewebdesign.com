@@ -75,6 +75,12 @@ export function Footer() {
             <p className="mt-1 text-sm text-[#56604b]">{SITE_CONFIG.description}</p>
           </div>
           <div className="flex flex-wrap gap-3">
+            <Link
+              href="/contact"
+              className="rounded-lg border border-[#1f2617] bg-[#1f2617] px-4 py-2 text-sm font-semibold text-[#f4f6ef] shadow-sm hover:bg-[#2a3220]"
+            >
+              Contact us
+            </Link>
             {enabledTasks.slice(0, 5).map((task) => (
               <Link key={task.key} href={task.route} className="rounded-lg border border-[#d7deca] bg-white px-3 py-2 text-sm font-medium text-[#1f2617] hover:bg-[#ebefdf]">
                 {task.label}
@@ -94,7 +100,7 @@ export function Footer() {
             <div className="rounded-[2rem] border border-white/[0.08] bg-white/[0.04] p-8 shadow-[0_24px_80px_rgba(0,0,0,0.35)] backdrop-blur-sm">
               <div className="flex items-center gap-3">
                 <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.06] p-1.5">
-                  <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+                  <img src="/favicon.png?v=20260414" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
                 </div>
                 <div>
                   <p className="text-lg font-semibold tracking-tight">{SITE_CONFIG.name}</p>
@@ -102,15 +108,23 @@ export function Footer() {
                 </div>
               </div>
               <p className="mt-5 max-w-md text-sm leading-7 text-zinc-400">{SITE_CONFIG.description}</p>
-              {primaryTask ? (
+              <div className="mt-6 flex flex-wrap gap-3">
+                {primaryTask ? (
+                  <Link
+                    href={primaryTask.route}
+                    className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground shadow-[0_8px_24px_oklch(0.5_0.15_28_/_0.35)] transition hover:brightness-110"
+                  >
+                    Explore {primaryTask.label}
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                ) : null}
                 <Link
-                  href={primaryTask.route}
-                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-semibold text-accent-foreground shadow-[0_8px_24px_oklch(0.5_0.15_28_/_0.35)] transition hover:brightness-110"
+                  href="/contact"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[0.08] px-5 py-2.5 text-sm font-semibold text-white transition hover:border-white/30 hover:bg-white/[0.12]"
                 >
-                  Explore {primaryTask.label}
-                  <ArrowRight className="h-4 w-4" />
+                  Contact us
                 </Link>
-              ) : null}
+              </div>
             </div>
             <div className="grid gap-8 sm:grid-cols-2 lg:col-span-2 lg:grid-cols-3">
               <div>
@@ -176,6 +190,12 @@ export function Footer() {
               </div>
               <h3 className="mt-5 text-3xl font-semibold tracking-[-0.04em]">{SITE_CONFIG.name}</h3>
               <p className="mt-4 max-w-md text-sm leading-7 text-[#72594a]">{SITE_CONFIG.description}</p>
+              <Link
+                href="/contact"
+                className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#dbc6b6] bg-white px-5 py-2.5 text-sm font-semibold text-[#2f1d16] transition hover:bg-[#fff4e8]"
+              >
+                Contact us
+              </Link>
             </div>
             <div>
               <h4 className="text-xs font-semibold uppercase tracking-[0.24em] text-[#8b6d5a]">Sections</h4>
@@ -206,7 +226,7 @@ export function Footer() {
           <div>
             <Link href="/" className="flex items-center gap-3">
               <div className="h-11 w-11 overflow-hidden rounded-2xl border border-slate-200 bg-white p-1 shadow-sm">
-                <img src="/favicon.png?v=20260401" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain" />
+                <img src="/favicon.png?v=20260414" alt={`${SITE_CONFIG.name} logo`} width="44" height="44" className="h-full w-full object-contain" />
               </div>
               <div>
                 <span className="block text-lg font-semibold">{SITE_CONFIG.name}</span>
@@ -214,6 +234,12 @@ export function Footer() {
               </div>
             </Link>
             <p className="mt-5 max-w-sm text-sm leading-7 text-slate-600">{SITE_CONFIG.description}</p>
+            <Link
+              href="/contact"
+              className="mt-5 inline-flex items-center gap-2 rounded-full border border-slate-900 bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+            >
+              Contact us
+            </Link>
           </div>
           {(['platform', 'company', 'resources', 'legal'] as const).map((section) => (
             <div key={section}>
