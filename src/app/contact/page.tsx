@@ -11,6 +11,8 @@ import { Textarea } from '@/components/ui/textarea'
 import { SITE_CONFIG } from '@/lib/site-config'
 import { buildPageMetadata } from '@/lib/seo'
 
+const CONTACT_EMAIL = process.env.NEXT_PUBLIC_CONTACT_EMAIL || 'contact@tynewebdesign.com'
+
 export async function generateMetadata(): Promise<Metadata> {
   return buildPageMetadata({
     path: '/contact',
@@ -19,21 +21,27 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-const reasons = [
+const contactChannels = [
   {
-    title: 'Creator & gallery support',
-    body: 'Questions about publishing, profiles, or how your work appears in the feed—we route you to the right team.',
+    title: 'DIRECT EMAIL',
+    body: CONTACT_EMAIL,
+    icon: Mail,
+    action: `mailto:${CONTACT_EMAIL}`,
+    label: 'SEND →',
+  },
+  {
+    title: 'CREATOR SUPPORT',
+    body: 'Questions about publishing, profiles, or how your work appears in the archive.',
     icon: ImageIcon,
+    action: '/help',
+    label: 'ACCESS →',
   },
   {
-    title: 'Partnerships & collaborations',
-    body: 'Sponsorships, integrations, and co-marketing that fit a visual-first product without noisy placements.',
+    title: 'PARTNERSHIPS',
+    body: 'Sponsorships, integrations, and co-marketing opportunities.',
     icon: User,
-  },
-  {
-    title: 'Technical & billing',
-    body: 'API access, account issues, and invoices. Include URLs and timestamps so we can reproduce anything odd.',
-    icon: MessageSquare,
+    action: '/contact',
+    label: 'LEARN →',
   },
 ]
 
@@ -42,120 +50,108 @@ export default function ContactPage() {
     <div className="min-h-screen bg-transparent text-foreground">
       <NavbarShell />
       <main>
-        <section className="relative overflow-hidden border-b border-border/60">
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,oklch(0.92_0.05_28_/_0.25),transparent_55%)]" />
-          <div className="relative mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8 lg:py-18">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Contact</p>
-            <h1 className="mt-4 max-w-3xl text-4xl font-semibold tracking-[-0.05em] sm:text-5xl lg:text-[3.1rem] lg:leading-[1.08]">
-              Tell us what you are publishing, fixing, or launching—we will route it to the right lane.
-            </h1>
-            <p className="mt-5 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-[1.05rem]">
-              {SITE_CONFIG.name} is built for galleries, profiles, and calm discovery. Whether you are a creator, a partner, or troubleshooting something technical, the more context you
-              share, the faster we can help.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-              <span className="inline-flex items-center gap-2">
-                <Clock className="h-4 w-4 text-accent" />
-                Typical reply within one business day
-              </span>
-              <Link href="/help" className="font-semibold text-foreground underline-offset-4 transition hover:text-accent hover:underline">
-                Browse help center
-              </Link>
+        <section className="border-b-4 border-slate-950 bg-white">
+          <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8">
+            <div className="border-2 border-slate-950 bg-[#ffeb3b] inline-block px-4 py-2">
+              <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">CONTACT</p>
             </div>
+            <h1 className="mt-6 font-mono text-4xl font-black uppercase leading-none text-slate-950 sm:text-5xl md:text-6xl">
+              SUBMIT YOUR INQUIRY
+            </h1>
+            <p className="mt-4 max-w-2xl text-base font-medium text-slate-700">
+              Direct communication. No forms, no queues. Choose your channel and reach us directly.
+            </p>
           </div>
         </section>
 
         <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
-          <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
-            <div className="space-y-5">
-              <div>
-                <h2 className="text-xl font-semibold tracking-[-0.02em]">Why people reach out</h2>
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
-                  Pick the area that fits you best in your message—we read everything and forward internally so you are not bounced between queues.
-                </p>
+          <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
+            <div className="space-y-4">
+              <div className="border-b-2 border-slate-950 pb-4">
+                <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">CHANNELS</p>
+                <h2 className="mt-2 font-mono text-2xl font-black uppercase text-slate-950">DIRECT ACCESS</h2>
               </div>
-              <div className="grid gap-4 sm:grid-cols-1">
-                {reasons.map((item) => {
+              <div className="grid gap-4">
+                {contactChannels.map((item) => {
                   const Icon = item.icon
                   return (
-                    <Card key={item.title} className="border-border bg-card/90 shadow-[var(--gallery-shadow-soft)] backdrop-blur-sm">
-                      <CardContent className="flex gap-4 p-5 sm:p-6">
-                        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl border border-border bg-muted/50">
-                          <Icon className="h-5 w-5 text-accent" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold">{item.title}</h3>
-                          <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{item.body}</p>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <Link
+                      key={item.title}
+                      href={item.action}
+                      className="group flex items-center gap-4 border-4 border-slate-950 bg-white p-6 shadow-[6px_6px_0_rgba(15,23,42,1)] transition-all duration-200 hover:shadow-[10px_10px_0_rgba(15,23,42,1)] hover:-translate-x-1 hover:-translate-y-1"
+                    >
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center border-2 border-slate-950 bg-[#ffeb3b]">
+                        <Icon className="h-6 w-6 text-slate-950" />
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-mono text-sm font-bold uppercase tracking-widest text-slate-950">{item.title}</p>
+                        <p className="mt-1 text-sm font-medium text-slate-700">{item.body}</p>
+                      </div>
+                      <div className="font-mono text-sm font-bold uppercase text-slate-950 group-hover:translate-x-1 transition-transform">
+                        {item.label}
+                      </div>
+                    </Link>
                   )
                 })}
               </div>
-              <Card className="border-dashed border-border bg-muted/20">
-                <CardContent className="flex flex-wrap items-center justify-between gap-4 p-5 sm:p-6">
-                  <div className="flex items-start gap-3">
-                    <Mail className="mt-0.5 h-5 w-5 text-accent" />
-                    <div>
-                      <p className="text-sm font-medium">Prefer self-serve first?</p>
-                      <p className="mt-1 text-sm text-muted-foreground">Status and docs cover most integration and uptime questions.</p>
-                    </div>
-                  </div>
-                  <Button asChild variant="outline" className="rounded-full shrink-0">
-                    <Link href="/status">
-                      System status
-                      <ArrowRight className="ml-1 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
             </div>
 
-            <Card className="border-border bg-card shadow-[var(--gallery-shadow)]">
-              <CardContent className="p-6 sm:p-8">
-                <h2 className="text-xl font-semibold tracking-[-0.02em]">Send a message</h2>
-                <p className="mt-2 text-sm text-muted-foreground">All fields help us respond with a concrete next step—not a generic auto-reply.</p>
-                <form className="mt-6 grid gap-5">
-                  <div className="grid gap-2 sm:grid-cols-2 sm:gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="contact-name">Name</Label>
-                      <Input id="contact-name" name="name" autoComplete="name" placeholder="Your name" className="rounded-xl" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="contact-email">Email</Label>
-                      <Input
-                        id="contact-email"
-                        name="email"
-                        type="email"
-                        autoComplete="email"
-                        placeholder="you@example.com"
-                        className="rounded-xl"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="contact-topic">Topic</Label>
-                    <Input id="contact-topic" name="topic" placeholder="e.g. Gallery upload, partnership, API question" className="rounded-xl" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="contact-message">Message</Label>
-                    <Textarea
-                      id="contact-message"
-                      name="message"
-                      placeholder="Share URLs, screenshots, and what you expected to happen."
-                      className="min-h-[160px] rounded-xl resize-y"
-                    />
-                  </div>
-                  <Button type="submit" className="w-full rounded-full sm:w-auto shadow-[0_8px_24px_oklch(0.5_0.15_28_/_0.2)]">
-                    Send message
-                    <ArrowRight className="ml-1 h-4 w-4" />
-                  </Button>
-                  <p className="text-xs text-muted-foreground">
-                    This form is for inquiries only. For urgent security issues, include “Security” in the topic line.
-                  </p>
-                </form>
-              </CardContent>
-            </Card>
+            <div className="border-4 border-slate-950 bg-white p-8 shadow-[8px_8px_0_rgba(15,23,42,1)]">
+              <div className="mb-6 border-b-2 border-slate-950 pb-4">
+                <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">ALTERNATIVE</p>
+                <h2 className="mt-2 font-mono text-2xl font-black uppercase text-slate-950">MESSAGE FORM</h2>
+              </div>
+              <form className="grid gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="contact-name" className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">NAME</Label>
+                  <Input
+                    id="contact-name"
+                    name="name"
+                    autoComplete="name"
+                    placeholder="YOUR NAME"
+                    className="border-2 border-slate-950 bg-white font-mono text-sm uppercase"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="contact-email" className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">EMAIL</Label>
+                  <Input
+                    id="contact-email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    placeholder="YOUR@EMAIL.COM"
+                    className="border-2 border-slate-950 bg-white font-mono text-sm uppercase"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="contact-topic" className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">TOPIC</Label>
+                  <Input
+                    id="contact-topic"
+                    name="topic"
+                    placeholder="SUBJECT LINE"
+                    className="border-2 border-slate-950 bg-white font-mono text-sm uppercase"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="contact-message" className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">MESSAGE</Label>
+                  <Textarea
+                    id="contact-message"
+                    name="message"
+                    placeholder="YOUR MESSAGE HERE..."
+                    className="min-h-[160px] border-2 border-slate-950 bg-white font-mono text-sm resize-y"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  className="w-full border-2 border-slate-950 bg-slate-950 py-4 font-mono text-sm font-bold uppercase text-white hover:bg-slate-800"
+                >
+                  SUBMIT MESSAGE →
+                </Button>
+                <p className="font-mono text-xs uppercase tracking-widest text-slate-500">
+                  For urgent security issues, include "SECURITY" in the subject line.
+                </p>
+              </form>
+            </div>
           </div>
         </section>
       </main>

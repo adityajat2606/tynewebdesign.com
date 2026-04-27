@@ -14,7 +14,7 @@ export const siteContent = {
       'Explore image-led posts, browse creator profiles, and move between visual work and the people behind it in one focused experience.',
     primaryCta: {
       label: 'Browse image sharing',
-      href: '/image-sharing',
+      href: '/images',
     },
     secondaryCta: {
       label: 'Explore profiles',

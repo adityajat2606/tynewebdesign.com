@@ -25,7 +25,7 @@ export const siteTaskDefinitions = [
   },
   {
     key: 'image',
-    label: 'Image Sharing',
+    label: 'Images',
     route: '/image-sharing',
     description: 'Galleries and media-first posts.',
     contentType: 'image',

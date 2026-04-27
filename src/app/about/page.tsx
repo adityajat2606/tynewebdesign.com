@@ -8,22 +8,22 @@ import { mockTeamMembers } from "@/data/mock-data";
 import { SITE_CONFIG } from "@/lib/site-config";
 
 const highlights = [
-  { label: "Creators onboarded", value: "12k+" },
-  { label: "Bookmarks shared", value: "180k" },
-  { label: "Listings published", value: "8.6k" },
+  { label: "ARCHIVED IMAGES", value: "42,847" },
+  { label: "ACTIVE CREATORS", value: "3,291" },
+  { label: "DAILY UPLOADS", value: "892" },
 ];
 
-const values = [
-  { title: "Curated by people", description: "We believe trusted recommendations beat endless feeds." },
-  { title: "Designed for focus", description: "Clear, calm UI helps you find the next best resource fast." },
-  { title: "Built to share", description: "Collections make collaboration and knowledge flow effortless." },
+const manifesto = [
+  { title: "NO ALGORITHMS", description: "We don't decide what you see. You do. Pure chronological discovery." },
+  { title: "RAW & UNFILTERED", description: "No filters, no edits, no AI enhancement. Just the image as captured." },
+  { title: "PERMANENT ARCHIVE", description: "Once published, it stays. No disappearing posts, no ephemeral content." },
 ];
 
 export default function AboutPage() {
   return (
     <PageShell
       title={`About ${SITE_CONFIG.name}`}
-      description={`${SITE_CONFIG.name} is a modern platform for creators, communities, and curated business discovery.`}
+      description={`${SITE_CONFIG.name} is a brutalist visual archive. No algorithms, no feeds—just raw image discovery in an editorial format.`}
       actions={
         <>
           <Button variant="outline" asChild>
@@ -35,58 +35,58 @@ export default function AboutPage() {
         </>
       }
     >
-      <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-        <Card className="border-border bg-card">
-          <CardContent className="space-y-4 p-6">
-            <Badge variant="secondary">Our Story</Badge>
-            <h2 className="text-2xl font-semibold text-foreground">
-              A single home for knowledge, discovery, and community.
+      <div className="grid gap-8 lg:grid-cols-[1fr_1fr]">
+        <div className="border-4 border-slate-950 bg-white p-8 shadow-[8px_8px_0_rgba(15,23,42,1)]">
+          <div className="mb-6 border-b-2 border-slate-950 pb-4">
+            <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">THE ARCHIVE</p>
+            <h2 className="mt-4 font-mono text-3xl font-black uppercase leading-none text-slate-950">
+              RAW VISUAL DISCOVERY
             </h2>
-            <p className="text-sm text-muted-foreground">
-              {SITE_CONFIG.name} brings together publishing, listings, and social bookmarking so teams can move faster
-              and keep their best resources close.
-            </p>
-            <div className="grid gap-4 sm:grid-cols-3">
-              {highlights.map((item) => (
-                <div key={item.label} className="rounded-lg border border-border bg-secondary/40 p-4">
-                  <div className="text-2xl font-semibold text-foreground">{item.value}</div>
-                  <div className="text-xs text-muted-foreground">{item.label}</div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+          </div>
+          <p className="text-base leading-relaxed text-slate-700">
+            {SITE_CONFIG.name} is not a social network. It's a brutalist visual archive. No algorithms decide what you see. No feeds manipulate your attention. Just pure, chronological image discovery in an editorial format.
+          </p>
+          <div className="mt-8 grid gap-4 sm:grid-cols-3">
+            {highlights.map((item) => (
+              <div key={item.label} className="border-2 border-slate-950 bg-[#ffeb3b] p-4">
+                <p className="font-mono text-2xl font-black uppercase text-slate-950">{item.value}</p>
+                <p className="mt-2 font-mono text-xs font-bold uppercase tracking-widest text-slate-950">{item.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
         <div className="space-y-4">
-          {values.map((value) => (
-            <Card key={value.title} className="border-border bg-card">
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-foreground">{value.title}</h3>
-                <p className="mt-2 text-sm text-muted-foreground">{value.description}</p>
-              </CardContent>
-            </Card>
+          {manifesto.map((item) => (
+            <div key={item.title} className="border-4 border-slate-950 bg-white p-6 shadow-[6px_6px_0_rgba(15,23,42,1)]">
+              <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">{item.title}</p>
+              <p className="mt-3 text-base font-medium text-slate-700">{item.description}</p>
+            </div>
           ))}
         </div>
       </div>
 
-      <div className="mt-10 grid gap-6 md:grid-cols-3">
-        {mockTeamMembers.map((member) => (
-          <Card key={member.id} className="border-border bg-card transition-transform hover:-translate-y-1">
-            <CardContent className="p-6">
-              <div className="flex items-center gap-3">
-                <Avatar className="h-12 w-12">
-                  <AvatarImage src={member.avatar} alt={member.name} />
-                  <AvatarFallback>{member.name.charAt(0)}</AvatarFallback>
-                </Avatar>
+      <div className="mt-12 border-4 border-slate-950 bg-white p-8 shadow-[8px_8px_0_rgba(15,23,42,1)]">
+        <div className="mb-6 border-b-2 border-slate-950 pb-4">
+          <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">THE TEAM</p>
+          <h3 className="mt-4 font-mono text-2xl font-black uppercase text-slate-950">ARCHIVE OPERATORS</h3>
+        </div>
+        <div className="grid gap-6 md:grid-cols-3">
+          {mockTeamMembers.map((member) => (
+            <div key={member.id} className="border-2 border-slate-950 bg-white p-6 shadow-[4px_4px_0_rgba(15,23,42,1)]">
+              <div className="flex items-center gap-4">
+                <div className="h-16 w-16 border-2 border-slate-950 bg-[#ffeb3b] flex items-center justify-center">
+                  <span className="font-mono text-xl font-black uppercase text-slate-950">{member.name.charAt(0)}</span>
+                </div>
                 <div>
-                  <p className="text-sm font-semibold text-foreground">{member.name}</p>
-                  <p className="text-xs text-muted-foreground">{member.role}</p>
+                  <p className="font-mono text-sm font-bold uppercase text-slate-950">{member.name}</p>
+                  <p className="font-mono text-xs uppercase tracking-widest text-slate-700">{member.role}</p>
                 </div>
               </div>
-              <p className="mt-3 text-sm text-muted-foreground">{member.bio}</p>
-              <p className="mt-3 text-xs text-muted-foreground">{member.location}</p>
-            </CardContent>
-          </Card>
-        ))}
+              <p className="mt-4 text-sm text-slate-700">{member.bio}</p>
+              <p className="mt-2 font-mono text-xs uppercase tracking-widest text-slate-500">{member.location}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </PageShell>
   );
