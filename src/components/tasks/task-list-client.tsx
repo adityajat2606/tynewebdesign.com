@@ -19,7 +19,7 @@ type Props = {
 function getLayoutClass(task: TaskKey, siteKey: ReturnType<typeof getSiteExperience>["key"]) {
   if (siteKey === "tynewebdesign") {
     return task === "image"
-      ? "grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+      ? "flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory"
       : "grid gap-6 md:grid-cols-2 xl:grid-cols-3";
   }
 
@@ -107,13 +107,18 @@ export function TaskListClient({ task, initialPosts, category }: Props) {
   }
 
   const layoutClass = getLayoutClass(task, experience.key);
+  const isHorizontalScroll = experience.key === "tynewebdesign" && task === "image";
 
   return (
     <div className={layoutClass}>
       {merged.map((post) => {
         const localOnly = (post as any).localOnly;
         const href = localOnly ? `/local/${task}/${post.slug}` : buildPostUrl(task, post.slug);
-        return <TaskPostCard key={post.id} post={post} href={href} taskKey={task} />;
+        return (
+          <div key={post.id} className={isHorizontalScroll ? "flex-shrink-0 w-[300px] snap-start" : ""}>
+            <TaskPostCard post={post} href={href} taskKey={task} />
+          </div>
+        );
       })}
     </div>
   );

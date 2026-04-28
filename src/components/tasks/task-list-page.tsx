@@ -19,41 +19,37 @@ function renderHero(
   route: string
 ) {
   const filterForm = (
-    <form action={route} className={`grid gap-3 border-2 border-slate-950 bg-white p-5 shadow-[4px_4px_0_rgba(15,23,42,1)] ${experience.key === "tynewebdesign" ? "" : experience.softPanelClass}`}>
-      <label className={`text-xs font-bold uppercase tracking-widest ${experience.key === "tynewebdesign" ? "font-mono text-slate-950" : experience.mutedClass}`}>
-        CATEGORY
+    <form action={route} className={`grid gap-3 rounded-[1.75rem] p-5 ${experience.softPanelClass}`}>
+      <label className={`text-xs font-semibold uppercase tracking-[0.24em] ${experience.mutedClass}`}>
+        Category
       </label>
       <select
         name="category"
         defaultValue={normalizedCategory}
-        className={`h-12 border-2 border-slate-950 bg-white px-3 text-sm font-bold uppercase ${experience.key === "tynewebdesign" ? "font-mono" : ""}`}
+        className="h-11 rounded-xl border border-border bg-white/80 px-3 text-sm text-foreground"
       >
-        <option value="all">ALL CATEGORIES</option>
+        <option value="all">All categories</option>
         {CATEGORY_OPTIONS.map((item) => (
           <option key={item.slug} value={item.slug}>
-            {item.name.toUpperCase()}
+            {item.name}
           </option>
         ))}
       </select>
-      <button type="submit" className={`h-12 border-2 border-slate-950 bg-slate-950 px-4 text-sm font-bold uppercase text-white hover:bg-slate-800 ${experience.key === "tynewebdesign" ? "font-mono" : experience.buttonClass}`}>
-        FILTER →
+      <button type="submit" className={`h-11 rounded-xl text-sm font-semibold ${experience.buttonClass}`}>
+        Apply filter
       </button>
     </form>
   );
 
   if (experience.key === "tynewebdesign") {
     return (
-      <section className="mb-12 border-4 border-slate-950 bg-white p-8 shadow-[8px_8px_0_rgba(15,23,42,1)]">
-        <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-          <div className="flex-1">
-            <div className="inline-block border-2 border-slate-950 bg-[#ffeb3b] px-4 py-2">
-              <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">{experience.heroEyebrow}</p>
-            </div>
-            <h1 className="mt-6 font-mono text-4xl font-black uppercase leading-none text-slate-950 sm:text-5xl md:text-6xl">{description}</h1>
-            <p className={`mt-4 max-w-2xl text-base font-medium leading-relaxed ${experience.mutedClass}`}>{experience.heroDescription}</p>
-          </div>
-          {filterForm}
+      <section className="mb-12 grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className={`rounded-[2.25rem] p-8 ${experience.panelClass}`}>
+          <p className={`text-xs font-semibold uppercase tracking-[0.3em] ${experience.mutedClass}`}>{experience.heroEyebrow}</p>
+          <h1 className="mt-4 text-4xl font-semibold tracking-[-0.05em] text-foreground sm:text-5xl">{description}</h1>
+          <p className={`mt-5 max-w-2xl text-sm leading-8 ${experience.mutedClass}`}>{experience.heroDescription}</p>
         </div>
+        {filterForm}
       </section>
     );
   }

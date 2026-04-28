@@ -121,20 +121,19 @@ export function TaskPostCard({
     return (
       <Link
         href={href}
-        className="group flex h-full flex-col overflow-hidden border-4 border-slate-950 bg-white shadow-[6px_6px_0_rgba(15,23,42,1)] transition-all duration-200 hover:shadow-[10px_10px_0_rgba(15,23,42,1)] hover:-translate-x-1 hover:-translate-y-1"
+        className={`group mb-5 block break-inside-avoid overflow-hidden rounded-[2rem] p-3 transition ${experience.panelClass}`}
       >
-        <div className={`relative overflow-hidden border-b-4 border-slate-950 ${imageAspect}`}>
-          <ContentImage src={image} alt={altText} fill className="object-cover grayscale group-hover:grayscale-0 transition duration-300" />
-          <div className="absolute left-0 top-0 border-b-4 border-r-4 border-slate-950 bg-[#ffeb3b] px-3 py-2">
-            <span className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">{category}</span>
-          </div>
+        <div className={`relative overflow-hidden rounded-[1.5rem] ${imageAspect}`}>
+          <ContentImage src={image} alt={altText} fill className="object-cover transition duration-500 group-hover:scale-[1.04]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/10 to-transparent" />
+          <span className={`absolute left-4 top-4 rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] ${experience.badgeClass}`}>
+            {category}
+          </span>
         </div>
-        <div className="flex flex-1 flex-col p-4">
-          <h3 className="font-mono text-lg font-bold uppercase leading-tight text-slate-950 line-clamp-2">{post.title}</h3>
-          <p className={`mt-3 flex-1 text-sm font-medium leading-relaxed ${experience.mutedClass} line-clamp-3`}>{excerpt}</p>
-          <div className="mt-4 border-t-2 border-slate-950 pt-3">
-            <MetaRow category={category} location={location} email={content.email} mutedClass={experience.mutedClass} />
-          </div>
+        <div className="p-3 pb-2">
+          <h3 className="text-xl font-semibold tracking-[-0.03em] text-foreground">{post.title}</h3>
+          <p className={`mt-3 text-sm leading-7 ${experience.mutedClass}`}>{excerpt}</p>
+          <MetaRow category={category} location={location} email={content.email} mutedClass={experience.mutedClass} />
         </div>
       </Link>
     );
