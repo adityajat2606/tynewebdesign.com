@@ -68,16 +68,50 @@ function DetailMeta({
   content,
   location,
   website,
+  description,
+  title,
+  category,
+  highlights,
   experience,
 }: {
   content: PostContent;
   location?: string;
   website?: string;
+  description?: string;
+  title?: string;
+  category?: string;
+  highlights?: string[];
   experience: ReturnType<typeof getSiteExperience>;
 }) {
   return (
     <div className={`rounded-[1.75rem] p-5 ${experience.softPanelClass}`}>
       <h2 className="text-lg font-semibold text-foreground">Details</h2>
+      {title ? (
+        <h3 className="mt-4 text-xl font-semibold text-foreground">{title}</h3>
+      ) : null}
+      {category ? (
+        <div className="mt-2">
+          <Badge variant="secondary" className="inline-flex items-center gap-1">
+            <Tag className="h-3.5 w-3.5" />
+            {category}
+          </Badge>
+        </div>
+      ) : null}
+      {description ? (
+        <div className={`mt-4 text-sm leading-6 ${experience.mutedClass}`} dangerouslySetInnerHTML={{ __html: description }} />
+      ) : null}
+      {highlights?.length ? (
+        <div className={`mt-4 rounded-[1.25rem] p-4 ${experience.panelClass}`}>
+          <p className="text-sm font-semibold text-foreground">Highlights</p>
+          <div className={`mt-3 grid gap-2 sm:grid-cols-2`}>
+            {highlights.map((item) => (
+              <div key={item} className={`rounded-lg border border-border bg-white/70 px-3 py-2 text-sm ${experience.mutedClass}`}>
+                {item}
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : null}
       <div className={`mt-4 space-y-3 text-sm ${experience.mutedClass}`}>
         {website ? (
           <div className="flex items-start gap-2">
@@ -243,33 +277,23 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
           <div className="space-y-6">
             {!isBookmark ? (
               experience.key === "tynewebdesign" ? (
-                <div className="grid gap-0 border-4 border-slate-950 bg-white shadow-[8px_8px_0_rgba(15,23,42,1)] md:grid-cols-[1fr_320px]">
-                  <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[500px]">
-                    <ContentImage src={images[0]} alt={post.title} fill className="object-cover grayscale md:grayscale-0" />
-                    <div className="absolute left-0 top-0 border-b-4 border-r-4 border-slate-950 bg-[#ffeb3b] px-4 py-3">
-                      <span className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">{category}</span>
-                    </div>
-                  </div>
-                  <div className="border-l-4 border-slate-950 bg-white p-6">
-                    <div className="space-y-4">
-                      <div>
-                        <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">ARCHIVE REF</p>
-                        <p className="mt-2 font-mono text-lg font-bold uppercase text-slate-950">{post.title}</p>
+                <div className={`overflow-hidden rounded-[2.4rem] ${experience.panelClass}`}>
+                  <div className="relative aspect-[4/3] sm:aspect-[16/10]">
+                    <ContentImage src={images[0]} alt={post.title} fill className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white via-white/30 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+                      <div className="flex flex-wrap items-center gap-3">
+                        <span className={`rounded-full px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.22em] ${experience.badgeClass}`}>
+                          {category}
+                        </span>
+                        {location ? (
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-white/80 px-3 py-1.5 text-xs font-medium text-slate-700 backdrop-blur-sm">
+                            <MapPin className="h-3.5 w-3.5" />
+                            {location}
+                          </span>
+                        ) : null}
                       </div>
-                      {location ? (
-                        <div className="border-t-2 border-slate-950 pt-4">
-                          <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">LOCATION</p>
-                          <p className="mt-2 text-sm font-medium text-slate-700">{location}</p>
-                        </div>
-                      ) : null}
-                      <div className="border-t-2 border-slate-950 pt-4">
-                        <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">METADATA</p>
-                        <div className="mt-2 space-y-2 text-sm text-slate-700">
-                          <p>Format: Image</p>
-                          <p>Status: Published</p>
-                          <p>Views: {Math.floor(Math.random() * 1000) + 100}</p>
-                        </div>
-                      </div>
+                      <h1 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-slate-900 sm:text-4xl">{post.title}</h1>
                     </div>
                   </div>
                 </div>
@@ -321,154 +345,23 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
               )
             ) : null}
 
-            <div className={`border-4 border-slate-950 bg-white p-6 shadow-[8px_8px_0_rgba(15,23,42,1)] ${experience.key === "tynewebdesign" ? "" : experience.panelClass}`}>
-              {experience.key === "tynewebdesign" ? (
-                <>
-                  <div className="border-b-2 border-slate-950 pb-4">
-                    <h1 className="font-mono text-3xl font-black uppercase leading-none text-slate-950 sm:text-4xl">
-                      {post.title}
-                    </h1>
+            {isArticle ? (
+              <div className={`rounded-[2rem] p-6 ${experience.panelClass}`}>
+                <p className={`mt-3 text-sm font-medium ${experience.mutedClass}`}>By {articleAuthor}</p>
+                {articleSummary ? <p className={`mt-4 text-sm leading-8 ${experience.mutedClass}`}>{articleSummary}</p> : null}
+                <RichContent html={articleHtml} className="mt-6 leading-8 prose-p:my-5 prose-h2:my-7 prose-h3:my-6" />
+                <div className={`mt-8 rounded-[1.75rem] p-5 ${introCard}`}>
+                  <p className="text-sm font-semibold text-foreground">Discussion</p>
+                  <div className="mt-4">
+                    <ArticleComments slug={post.slug} />
                   </div>
-                  <div className="mt-6 space-y-6">
-                    {isArticle ? (
-                      <>
-                        <div className="border-b-2 border-slate-950 pb-4">
-                          <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">AUTHOR</p>
-                          <p className="mt-2 text-sm font-medium text-slate-700">{articleAuthor}</p>
-                        </div>
-                        {articleSummary ? (
-                          <div className="border-b-2 border-slate-950 pb-4">
-                            <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">ABSTRACT</p>
-                            <p className={`mt-2 text-sm leading-relaxed ${experience.mutedClass}`}>{articleSummary}</p>
-                          </div>
-                        ) : null}
-                        <div>
-                          <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">CONTENT</p>
-                          <RichContent html={articleHtml} className="mt-4 leading-8 prose-p:my-4 prose-h2:my-6 prose-h3:my-5 prose-h2:font-mono prose-h2:font-bold prose-h2:uppercase prose-h2:text-xl" />
-                        </div>
-                        <div className="border-2 border-slate-950 bg-[#ffeb3b] p-5">
-                          <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">DISCUSSION</p>
-                          <div className="mt-4">
-                            <ArticleComments slug={post.slug} />
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <div>
-                          <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">DESCRIPTION</p>
-                          <RichContent html={descriptionHtml} className="mt-4 max-w-3xl leading-relaxed" />
-                        </div>
-                        {content.highlights?.length ? (
-                          <div className="border-2 border-slate-950 bg-[#ffeb3b] p-5">
-                            <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">KEY POINTS</p>
-                            <ul className={`mt-4 space-y-2 text-sm font-medium ${experience.mutedClass}`}>
-                              {content.highlights.map((item) => (
-                                <li key={item} className="flex items-start gap-2">
-                                  <span className="font-mono font-bold text-slate-950">→</span>
-                                  <span>{item}</span>
-                                </li>
-                              ))}
-                            </ul>
-                          </div>
-                        ) : null}
-                      </>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <Badge variant="secondary" className="inline-flex items-center gap-1">
-                      <Tag className="h-3.5 w-3.5" />
-                      {category}
-                    </Badge>
-                    {location ? (
-                      <span className={`inline-flex items-center gap-1 text-sm ${experience.mutedClass}`}>
-                        <MapPin className="h-4 w-4" />
-                        {location}
-                      </span>
-                    ) : null}
-                    {articleDate ? <span className={`text-sm ${experience.mutedClass}`}>{articleDate}</span> : null}
-                  </div>
-
-                  <h1 className="mt-4 text-3xl font-semibold tracking-[-0.04em] text-foreground sm:text-4xl">
-                    {post.title}
-                  </h1>
-
-                  {isArticle ? (
-                    <>
-                      <p className={`mt-3 text-sm font-medium ${experience.mutedClass}`}>By {articleAuthor}</p>
-                      {articleSummary ? <p className={`mt-4 text-sm leading-8 ${experience.mutedClass}`}>{articleSummary}</p> : null}
-                      <RichContent html={articleHtml} className="mt-6 leading-8 prose-p:my-5 prose-h2:my-7 prose-h3:my-6" />
-                      <div className={`mt-8 rounded-[1.75rem] p-5 ${introCard}`}>
-                        <p className="text-sm font-semibold text-foreground">Discussion</p>
-                        <div className="mt-4">
-                          <ArticleComments slug={post.slug} />
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <RichContent html={descriptionHtml} className="mt-4 max-w-3xl" />
-                      {content.highlights?.length ? (
-                        <div className={`mt-6 rounded-[1.75rem] p-5 ${experience.softPanelClass}`}>
-                          <p className="text-sm font-semibold text-foreground">Highlights</p>
-                          <ul className={`mt-3 space-y-2 text-sm ${experience.mutedClass}`}>
-                            {content.highlights.map((item) => (
-                              <li key={item}>• {item}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ) : null}
-                    </>
-                  )}
-                </>
-              )}
-            </div>
+                </div>
+              </div>
+            ) : null}
           </div>
 
           <aside className="space-y-6">
-            <div className={`rounded-[2rem] p-6 ${experience.panelClass}`}>
-              <p className={`text-xs font-semibold uppercase tracking-[0.24em] ${experience.mutedClass}`}>
-                {experience.label}
-              </p>
-              <p className="mt-4 text-2xl font-semibold text-foreground">{taskConfig?.label || task}</p>
-              <p className={`mt-3 text-sm leading-7 ${experience.mutedClass}`}>
-                {experience.heroDescription}
-              </p>
-            </div>
-
-            <DetailMeta content={content} location={location} website={website} experience={experience} />
-
-            {experience.key === "scoreminers" ? (
-              <div className={`p-5 ${experience.softPanelClass}`}>
-                <p className="text-xs font-black uppercase tracking-[0.24em] text-slate-950">Performance blocks</p>
-                <div className="mt-4 grid gap-3">
-                  {["Total Tasks 148", "Success 96%", "Level 19"].map((item) => (
-                    <div key={item} className="border-[3px] border-slate-950 bg-white px-4 py-3 text-sm font-black uppercase text-slate-950">
-                      {item}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className={`rounded-[1.75rem] p-5 ${experience.softPanelClass}`}>
-                <p className="text-sm font-semibold text-foreground">Identity metrics</p>
-                <div className="mt-4 grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
-                  {[
-                    { label: "Total tasks", value: "148" },
-                    { label: "Success rate", value: "94%" },
-                    { label: "Level", value: "Expert" },
-                  ].map((item) => (
-                    <div key={item.label} className="rounded-[1.25rem] border border-border bg-white/70 px-4 py-3">
-                      <p className={`text-[11px] font-semibold uppercase tracking-[0.22em] ${experience.mutedClass}`}>{item.label}</p>
-                      <p className="mt-2 text-2xl font-semibold text-foreground">{item.value}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
+            <DetailMeta content={content} location={location} website={website} description={descriptionHtml} title={post.title} category={category} highlights={content.highlights} experience={experience} />
           </aside>
         </section>
 

@@ -25,20 +25,20 @@ export type SiteExperience = {
 
 const FALLBACK_EXPERIENCE: SiteExperience = {
   key: "tynewebdesign",
-  label: "Bold Editorial",
+  label: "Northern Glass",
   fontClass: "font-sans",
   pageClass:
-    "bg-[#f5f3ef] text-slate-950",
+    "bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.18),transparent_28%),linear-gradient(180deg,#f4fbff_0%,#ffffff_100%)]",
   panelClass:
-    "border-4 border-slate-950 bg-white shadow-[8px_8px_0_rgba(15,23,42,1)]",
-  softPanelClass: "border-2 border-slate-950 bg-[#ffeb3b]",
-  mutedClass: "text-slate-700",
-  badgeClass: "bg-slate-950 text-white font-mono",
-  buttonClass: "bg-slate-950 text-white font-bold hover:bg-slate-800 border-2 border-slate-950",
-  outlineButtonClass: "border-2 border-slate-950 bg-white text-slate-950 font-bold hover:bg-slate-100",
-  heroEyebrow: "RAW VISUAL ARCHIVE",
+    "border border-white/50 bg-white/72 shadow-[0_30px_90px_rgba(14,116,144,0.16)] backdrop-blur-xl",
+  softPanelClass: "border border-white/60 bg-white/55 backdrop-blur-lg",
+  mutedClass: "text-slate-600",
+  badgeClass: "bg-sky-950 text-sky-50",
+  buttonClass: "bg-sky-950 text-white hover:bg-sky-900",
+  outlineButtonClass: "border border-sky-200 bg-white/70 text-sky-950 hover:bg-sky-50",
+  heroEyebrow: "Glassmorphic creator surfaces",
   heroDescription:
-    "Unfiltered image discovery. No algorithms, no feeds—just pure visual content in a brutalist editorial format.",
+    "Floating identity blocks, softer depth, and a masonry-first gallery flow built for visual browsing.",
 };
 
 const EXPERIENCES: Record<SiteExperience["key"], SiteExperience> = {

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { BarChart3, CheckCircle2, Globe, Layers3, Sparkles, Trophy } from "lucide-react";
+import { BarChart3, Globe, Sparkles } from "lucide-react";
 import { Footer } from "@/components/shared/footer";
 import { NavbarShell } from "@/components/shared/navbar-shell";
 import { ContentImage } from "@/components/shared/content-image";
@@ -63,67 +63,6 @@ export async function generateMetadata({ params }: { params: Promise<{ username:
   }
 }
 
-function renderStats(experience: ReturnType<typeof getSiteExperience>) {
-  const stats = [
-    { label: "Total tasks", value: "148", icon: Layers3 },
-    { label: "Success rate", value: "94%", icon: CheckCircle2 },
-    { label: "Level", value: "Expert", icon: Trophy },
-  ];
-
-  if (experience.key === "scoreminers") {
-    return (
-      <div className="grid gap-3 sm:grid-cols-3">
-        {stats.map((item) => {
-          const Icon = item.icon;
-          return (
-            <div key={item.label} className="border-[3px] border-slate-950 bg-[#fff5b4] px-4 py-4 shadow-[6px_6px_0_rgba(15,23,42,0.9)]">
-              <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.22em] text-slate-950">
-                <Icon className="h-4 w-4" />
-                {item.label}
-              </div>
-              <p className="mt-3 text-3xl font-black uppercase text-slate-950">{item.value}</p>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-
-  if (experience.key === "radianpark") {
-    return (
-      <div className="flex flex-wrap gap-3">
-        {stats.map((item) => {
-          const Icon = item.icon;
-          return (
-            <div key={item.label} className="inline-flex items-center gap-3 rounded-full border border-zinc-200 bg-white px-4 py-3 shadow-sm">
-              <Icon className="h-4 w-4 text-zinc-500" />
-              <span className="text-sm font-semibold text-zinc-950">{item.value}</span>
-              <span className="text-xs uppercase tracking-[0.2em] text-zinc-500">{item.label}</span>
-            </div>
-          );
-        })}
-      </div>
-    );
-  }
-
-  return (
-    <div className="grid gap-4 sm:grid-cols-3">
-      {stats.map((item) => {
-        const Icon = item.icon;
-        return (
-          <div key={item.label} className={`rounded-[1.5rem] p-4 ${experience.softPanelClass}`}>
-            <div className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.22em] ${experience.mutedClass}`}>
-              <Icon className="h-4 w-4" />
-              {item.label}
-            </div>
-            <p className="mt-3 text-3xl font-semibold text-foreground">{item.value}</p>
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
 export default async function ProfileDetailPage({ params }: { params: Promise<{ username: string }> }) {
   const resolvedParams = await params;
   const post = await fetchTaskPostBySlug("profile", resolvedParams.username);
@@ -171,36 +110,25 @@ export default async function ProfileDetailPage({ params }: { params: Promise<{ 
         <SchemaJsonLd data={breadcrumbData} />
 
         {experience.key === "tynewebdesign" ? (
-          <section className="mx-auto max-w-5xl border-4 border-slate-950 bg-white shadow-[8px_8px_0_rgba(15,23,42,1)]">
-            <div className="grid gap-0 md:grid-cols-[1fr_320px]">
-              <div className="border-b-4 border-slate-950 md:border-b-0 md:border-r-4 p-8">
-                <div className="mb-6 border-b-2 border-slate-950 pb-4">
-                  <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">PROFILE ARCHIVE</p>
-                  <h1 className="mt-4 font-mono text-4xl font-black uppercase leading-none text-slate-950">{brandName}</h1>
-                  {domain ? (
-                    <p className="mt-2 font-mono text-sm uppercase tracking-widest text-slate-700">{domain}</p>
-                  ) : null}
+          <section className={`mx-auto max-w-5xl overflow-hidden rounded-[2.4rem] ${experience.panelClass}`}>
+            <div className="relative h-52 sm:h-64">
+              {coverUrl ? (
+                <ContentImage src={coverUrl} alt={`${brandName} cover`} fill className="object-cover" sizes="100vw" />
+              ) : (
+                <div className="h-full w-full bg-gradient-to-br from-sky-100 via-white to-cyan-100" />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-white via-white/20 to-transparent" />
+            </div>
+            <div className="relative px-6 pb-10 pt-0 md:px-10">
+              <div className="-mt-16 flex flex-col items-center gap-6 md:flex-row md:items-end">
+                <div className="relative h-32 w-32 overflow-hidden rounded-[2rem] border-4 border-white bg-white shadow-xl">
+                  {logoUrl ? <ContentImage src={logoUrl} alt={brandName} fill className="object-cover" /> : null}
                 </div>
-                <div className="mt-6">{renderStats(experience)}</div>
-              </div>
-              <div className="p-8">
-                <div className="relative aspect-square overflow-hidden border-4 border-slate-950 bg-[#ffeb3b]">
-                  {logoUrl ? (
-                    <ContentImage src={logoUrl} alt={brandName} fill className="object-cover grayscale" />
-                  ) : (
-                    <div className="flex h-full items-center justify-center">
-                      <span className="font-mono text-6xl font-black uppercase text-slate-950">{brandName.charAt(0)}</span>
-                    </div>
-                  )}
+                <div className="min-w-0 flex-1 text-center md:text-left">
+                  <p className={`text-xs font-semibold uppercase tracking-[0.28em] ${experience.mutedClass}`}>Floating identity card</p>
+                  <h1 className="mt-2 text-4xl font-semibold tracking-[-0.04em] text-foreground">{brandName}</h1>
+                  {domain ? <p className={`mt-2 text-sm ${experience.mutedClass}`}>{domain}</p> : null}
                 </div>
-                {coverUrl ? (
-                  <div className="mt-4">
-                    <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">COVER IMAGE</p>
-                    <div className="mt-2 relative aspect-[16/10] overflow-hidden border-2 border-slate-950">
-                      <ContentImage src={coverUrl} alt={`${brandName} cover`} fill className="object-cover grayscale" />
-                    </div>
-                  </div>
-                ) : null}
               </div>
             </div>
           </section>
@@ -210,7 +138,6 @@ export default async function ProfileDetailPage({ params }: { params: Promise<{ 
               <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-300">Split profile</p>
               <h1 className="mt-4 text-5xl font-semibold tracking-[-0.05em] text-white">{brandName}</h1>
               {domain ? <p className="mt-3 text-sm text-slate-300">{domain}</p> : null}
-              <div className="mt-8">{renderStats(experience)}</div>
             </div>
             <div className="grid bg-[#eef3ff] p-8">
               <div className="grid gap-5 rounded-[1.75rem] border border-white bg-white p-5 shadow-[0_20px_60px_rgba(15,23,42,0.08)]">
@@ -237,9 +164,6 @@ export default async function ProfileDetailPage({ params }: { params: Promise<{ 
                   <p className="text-xs font-semibold uppercase tracking-[0.28em] text-zinc-500">Signal bar</p>
                   <h1 className="mt-2 text-3xl font-semibold text-zinc-950">{brandName}</h1>
                 </div>
-                <div className="flex flex-wrap gap-3">
-                  {renderStats(experience)}
-                </div>
               </div>
               <div className="grid gap-6 lg:grid-cols-[220px_1fr]">
                 <div className="relative aspect-[4/5] overflow-hidden rounded-[1.75rem] bg-zinc-100">
@@ -263,7 +187,6 @@ export default async function ProfileDetailPage({ params }: { params: Promise<{ 
                     {domain}
                   </div>
                 ) : null}
-                {renderStats(experience)}
               </div>
               <div className="grid gap-5">
                 <div className="relative aspect-[16/10] overflow-hidden rounded-[2rem] bg-muted">
@@ -286,35 +209,28 @@ export default async function ProfileDetailPage({ params }: { params: Promise<{ 
           </section>
         )}
 
-        <section className="mt-10 grid gap-8 lg:grid-cols-[1fr_1fr]">
-          <div className="border-4 border-slate-950 bg-white p-8 shadow-[8px_8px_0_rgba(15,23,42,1)]">
-            <div className="mb-6 border-b-2 border-slate-950 pb-4">
-              <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">PROFILE DATA</p>
-            </div>
-            <article
-              className="article-content prose prose-p:my-4 prose-p:text-slate-700 prose-p:font-medium prose-strong:font-bold prose-strong:text-slate-950 prose-a:text-slate-950 prose-a:underline"
-              dangerouslySetInnerHTML={{ __html: descriptionHtml }}
-            />
-          </div>
+        <section className="mt-10 grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
+          <article
+            className={`article-content prose mx-auto max-w-none rounded-[2rem] p-6 prose-p:my-4 prose-a:text-primary prose-a:underline prose-strong:font-semibold ${experience.panelClass}`}
+            dangerouslySetInnerHTML={{ __html: descriptionHtml }}
+          />
 
-          <aside className="space-y-6">
-            <div className="border-4 border-slate-950 bg-[#ffeb3b] p-6 shadow-[6px_6px_0_rgba(15,23,42,1)]">
-              <div className="mb-4 border-b-2 border-slate-950 pb-4">
-                <p className="font-mono text-xs font-bold uppercase tracking-widest text-slate-950">ARCHIVE METADATA</p>
+          <aside className="space-y-5">
+            <div className={`rounded-[2rem] p-6 ${experience.softPanelClass}`}>
+              <div className={`flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.24em] ${experience.mutedClass}`}>
+                <BarChart3 className="h-4 w-4" />
+                Profile rhythm
               </div>
-              <p className="font-mono text-lg font-black uppercase text-slate-950">{experience.label}</p>
-              <p className="mt-3 text-sm font-medium text-slate-700">
-                Brutalist editorial profile system. No algorithms, no feeds—pure visual archive format.
+              <p className="mt-4 text-lg font-semibold text-foreground">{experience.label}</p>
+              <p className={`mt-3 text-sm leading-7 ${experience.mutedClass}`}>
+                Each site now treats the identity card and result sections differently so the jump between domains feels obvious.
               </p>
             </div>
 
             {website ? (
-              <Button
-                asChild
-                className="w-full border-2 border-slate-950 bg-slate-950 py-4 font-mono text-sm font-bold uppercase text-white hover:bg-slate-800"
-              >
+              <Button asChild className={`w-full ${experience.buttonClass}`}>
                 <Link href={website} target="_blank" rel="noopener noreferrer">
-                  VISIT WEBSITE →
+                  Visit website
                 </Link>
               </Button>
             ) : null}
