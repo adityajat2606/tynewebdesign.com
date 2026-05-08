@@ -22,7 +22,7 @@ const buildPlatformLinks = () => {
   const { recipe } = getFactoryState()
   const visual = getProductKind(recipe) === 'visual'
   const tasks = SITE_CONFIG.tasks.filter((task) => task.enabled)
-  const filtered = visual ? tasks.filter((task) => task.key === 'image' || task.key === 'profile') : tasks
+  const filtered = visual ? tasks.filter((task) => task.key === 'image') : tasks
   return filtered.map((task) => ({
     name: task.label,
     href: task.route,

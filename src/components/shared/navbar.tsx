@@ -116,7 +116,7 @@ export function Navbar() {
 
   const navigation = useMemo(() => {
     if (productKind === 'visual') {
-      return SITE_CONFIG.tasks.filter((task) => task.enabled && (task.key === 'image' || task.key === 'profile'))
+      return SITE_CONFIG.tasks.filter((task) => task.enabled && task.key === 'image')
     }
     return SITE_CONFIG.tasks.filter((task) => task.enabled && task.key !== 'profile')
   }, [productKind])
