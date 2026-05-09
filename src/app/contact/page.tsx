@@ -190,48 +190,6 @@ export default function ContactPage() {
 
               </div>
 
-              <Card className="border-dashed border-border bg-muted/20">
-
-                <CardContent className="flex flex-wrap items-center justify-between gap-4 p-5 sm:p-6">
-
-                  <div className="flex items-start gap-3">
-
-                    <Mail className="mt-0.5 h-5 w-5 text-accent" />
-
-                    <div>
-
-                      <p className="text-sm font-medium">Email us directly</p>
-
-                      <p className="mt-1 text-sm text-muted-foreground">
-
-                        <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-foreground hover:underline">
-
-                          {CONTACT_EMAIL}
-
-                        </a>
-
-                      </p>
-
-                    </div>
-
-                  </div>
-
-                  <Button asChild variant="outline" className="rounded-full shrink-0">
-
-                    <Link href={`mailto:${CONTACT_EMAIL}`}>
-
-                      Send email
-
-                      <ArrowRight className="ml-1 h-4 w-4" />
-
-                    </Link>
-
-                  </Button>
-
-                </CardContent>
-
-              </Card>
-
             </div>
 
 

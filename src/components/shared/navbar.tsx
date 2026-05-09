@@ -138,8 +138,8 @@ export function Navbar() {
         <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           <div className="flex min-w-0 items-center gap-4">
             <Link href="/" className="flex shrink-0 items-center gap-3">
-              <div className={cn('flex h-12 w-12 items-center justify-center overflow-hidden p-1.5', palette.logo)}>
-                <img src="/favicon.png?v=20260414" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+              <div className={cn('flex h-16 w-16 items-center justify-center overflow-hidden p-1', palette.logo)}>
+                <img src="/favicon.png?v=20260414" alt={`${SITE_CONFIG.name} logo`} width="64" height="64" className="h-full w-full object-contain" />
               </div>
               <div className="min-w-0 hidden sm:block">
                 <span className="block truncate text-xl font-semibold">{SITE_CONFIG.name}</span>
@@ -280,8 +280,8 @@ export function Navbar() {
                 className={cn('flex items-center gap-3', collapsed ? 'justify-center px-0' : 'px-2')}
                 data-content-type="home"
               >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-1.5 shadow-inner">
-                  <img src="/favicon.png?v=20260414" alt="" width="44" height="44" className="h-full w-full object-contain" />
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-0 shadow-inner">
+                  <img src="/favicon.png?v=20260414" alt="" width="56" height="56" className="h-full w-full object-contain" />
                 </div>
                 {!collapsed && (
                   <div className="min-w-0">
@@ -333,36 +333,8 @@ export function Navbar() {
                   )}
                 </Button>
 
-                {primaryTask ? (
-                  collapsed ? (
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Link
-                          href={primaryTask.route}
-                          className="flex items-center justify-center rounded-xl border border-white/12 bg-white/5 py-2.5 text-zinc-100 transition hover:bg-white/10"
-                          data-content-type={primaryTask.contentType}
-                        >
-                          <Sparkles className="h-4 w-4 text-amber-400" />
-                          <span className="sr-only">{primaryTask.label}</span>
-                        </Link>
-                      </TooltipTrigger>
-                      <TooltipContent side="right" sideOffset={10} className="border-white/10 bg-zinc-900 text-zinc-100">
-                        {primaryTask.label}
-                      </TooltipContent>
-                    </Tooltip>
-                  ) : (
-                    <Link
-                      href={primaryTask.route}
-                      className="flex items-center gap-2 rounded-xl border border-white/12 bg-white/5 px-3 py-2.5 text-xs font-semibold uppercase tracking-[0.14em] text-zinc-200 transition hover:bg-white/10"
-                      data-content-type={primaryTask.contentType}
-                    >
-                      <Sparkles className="h-3.5 w-3.5 text-amber-400" />
-                      {primaryTask.label}
-                    </Link>
-                  )
-                ) : null}
                 {isAuthenticated ? (
-                  <NavbarAuthControls hideNotifications />
+                  <NavbarAuthControls />
                 ) : collapsed ? (
                   <div className="flex flex-col gap-2">
                     <Tooltip>
@@ -412,8 +384,8 @@ export function Navbar() {
 
           <header className="sticky top-0 z-50 flex h-14 items-center justify-between gap-3 border-b border-white/10 bg-zinc-950/95 px-4 backdrop-blur-xl lg:hidden">
             <Link href="/" className="flex min-w-0 items-center gap-2" data-content-type="home">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/5 p-1 shadow-inner">
-                <img src="/favicon.png?v=20260414" alt="" width="36" height="36" className="h-full w-full object-contain" />
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/10 bg-white/5 p-0.5 shadow-inner">
+                <img src="/favicon.png?v=20260414" alt="" width="48" height="48" className="h-full w-full object-contain" />
               </div>
               <span className="truncate text-sm font-semibold text-white">{SITE_CONFIG.name}</span>
             </Link>
@@ -489,8 +461,8 @@ export function Navbar() {
       <nav className={cn('mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8', isFloating ? 'h-24 pt-4' : 'h-20')}>
         <div className="flex min-w-0 flex-1 items-center gap-4 lg:gap-7">
           <Link href="/" className="flex shrink-0 items-center gap-3 whitespace-nowrap pr-2">
-            <div className={cn('flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden p-1.5', style.logo)}>
-              <img src="/favicon.png?v=20260414" alt={`${SITE_CONFIG.name} logo`} width="48" height="48" className="h-full w-full object-contain" />
+            <div className={cn('flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden p-1', style.logo)}>
+              <img src="/favicon.png?v=20260414" alt={`${SITE_CONFIG.name} logo`} width="64" height="64" className="h-full w-full object-contain" />
             </div>
             <div className="min-w-0 hidden sm:block">
               <span className="block truncate text-xl font-semibold">{SITE_CONFIG.name}</span>

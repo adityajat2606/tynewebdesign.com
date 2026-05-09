@@ -2,7 +2,7 @@ import type { TaskKey } from '@/lib/site-config'
 
 export const siteContent = {
   navbar: {
-    tagline: 'Image sharing & creator profiles',
+    tagline: '',
   },
   footer: {
     tagline: 'Visual posts and public profiles',
@@ -11,7 +11,7 @@ export const siteContent = {
     badge: 'Latest visuals & creators',
     title: ['A home for', 'images, galleries, and creator profiles.'],
     description:
-      'Explore image-led posts, browse creator profiles, and move between visual work and the people behind it in one focused experience.',
+      'A modern discovery experience with a cleaner flow for exploring people, places, and opportunities.',
     primaryCta: {
       label: 'Browse image sharing',
       href: '/images',

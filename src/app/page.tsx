@@ -360,7 +360,7 @@ function VisualHome({ primaryTask, imagePosts, profilePosts, articlePosts }: { p
                 Discover · Share · Collect
               </span>
               <h1 className={`mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.055em] sm:text-5xl lg:text-[3.15rem] lg:leading-[1.08] ${tone.title}`}>
-                A calmer feed for images and the people behind them.
+                A modern discovery experience with a cleaner flow for exploring people, places, and opportunities.
               </h1>
               <p className={`mt-5 max-w-xl text-base leading-relaxed sm:text-[1.05rem] ${tone.muted}`}>{SITE_CONFIG.description}</p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -371,9 +371,7 @@ function VisualHome({ primaryTask, imagePosts, profilePosts, articlePosts }: { p
                   Browse images
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/profile" className={`inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold ${tone.actionAlt}`}>
-                  Creator profiles
-                </Link>
+              
                 <Link
                   href="/search"
                   className="inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-medium text-muted-foreground underline-offset-4 transition hover:text-foreground"

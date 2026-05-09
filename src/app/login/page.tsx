@@ -1,11 +1,14 @@
+'use client'
+
+import { useState } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Bookmark, Building2, FileText, Image as ImageIcon, Sparkles } from 'lucide-react'
 import { NavbarShell } from '@/components/shared/navbar-shell'
 import { Footer } from '@/components/shared/footer'
-import { getFactoryState } from '@/design/factory/get-factory-state'
-import { getProductKind } from '@/design/factory/get-product-kind'
+import { useAuth } from '@/lib/auth-context'
 
-function getLoginConfig(kind: ReturnType<typeof getProductKind>) {
+function getLoginConfig(kind: 'directory' | 'editorial' | 'visual' | 'curated') {
   if (kind === 'directory') {
     return {
       shell: 'bg-[#f8fbff] text-slate-950',
@@ -50,15 +53,42 @@ function getLoginConfig(kind: ReturnType<typeof getProductKind>) {
     action: 'bg-[#5b2b3b] text-[#fff0f5] hover:bg-[#74364b]',
     icon: Bookmark,
     title: 'Open your curated collections',
-    body: 'Manage saved resources, collection notes, and curator identity from a calmer workspace.',
+    body: 'Manage saved resources, collection notes, and curator identity without a generic feed setup.',
   }
 }
 
 export default function LoginPage() {
-  const { recipe } = getFactoryState()
-  const productKind = getProductKind(recipe)
+  const router = useRouter()
+  const { login } = useAuth()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Determine visual product kind from body data attribute set by layout
+  const productKind: 'directory' | 'editorial' | 'visual' | 'curated' =
+    (typeof document !== 'undefined' && document.body.getAttribute('data-site-shell')) === 'listing-home'
+      ? 'directory'
+      : (typeof document !== 'undefined' && document.body.getAttribute('data-site-shell')) === 'editorial-home'
+        ? 'editorial'
+        : (typeof document !== 'undefined' && document.body.getAttribute('data-motion-pack')) === 'visual'
+          ? 'visual'
+          : 'curated'
+
   const config = getLoginConfig(productKind)
   const Icon = config.icon
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    try {
+      await login(email, password)
+      router.push('/')
+    } catch {
+      // login handles errors internally
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <div className={`min-h-screen ${config.shell}`}>
@@ -78,10 +108,29 @@ export default function LoginPage() {
 
           <div className={`rounded-[2rem] p-8 ${config.panel}`}>
             <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Welcome back</p>
-            <form className="mt-6 grid gap-4">
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Email address" />
-              <input className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm" placeholder="Password" type="password" />
-              <button type="submit" className={`inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-semibold ${config.action}`}>Sign in</button>
+            <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
+              <input
+                className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <input
+                className="h-12 rounded-xl border border-current/10 bg-transparent px-4 text-sm"
+                placeholder="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className={`inline-flex h-12 items-center justify-center rounded-full px-6 text-sm font-semibold ${config.action}`}
+              >
+                {isSubmitting ? 'Signing in...' : 'Sign in'}
+              </button>
             </form>
             <div className={`mt-6 flex items-center justify-between text-sm ${config.muted}`}>
               <Link href="/forgot-password" className="hover:underline">Forgot password?</Link>
