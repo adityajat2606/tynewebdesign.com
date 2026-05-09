@@ -137,18 +137,18 @@ function getCurationTone() {
   }
 }
 
-function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPosts, profilePosts, brandPack }: {
+function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPosts, brandPack }: {
   primaryTask?: EnabledTask
   enabledTasks: EnabledTask[]
   listingPosts: SitePost[]
   classifiedPosts: SitePost[]
-  profilePosts: SitePost[]
   brandPack: string
 }) {
   const tone = getDirectoryTone(brandPack)
   const featuredListings = (listingPosts.length ? listingPosts : classifiedPosts).slice(0, 3)
   const featuredTaskKey: TaskKey = listingPosts.length ? 'listing' : 'classified'
   const quickRoutes = enabledTasks.slice(0, 4)
+  const supportCards = classifiedPosts.slice(0, 4)
 
   return (
     <main>
@@ -244,9 +244,9 @@ function DirectoryHome({ primaryTask, enabledTasks, listingPosts, classifiedPost
             </ul>
           </div>
           <div className="grid gap-4 md:grid-cols-2">
-            {(profilePosts.length ? profilePosts : classifiedPosts).slice(0, 4).map((post) => {
+            {supportCards.map((post) => {
               const meta = getPostMeta(post)
-              const taskKey = resolveTaskKey(post.task, profilePosts.length ? 'profile' : 'classified')
+              const taskKey = resolveTaskKey(post.task, 'classified')
               return (
                 <Link key={post.id} href={getTaskHref(taskKey, post.slug)} className={`overflow-hidden rounded-[1.8rem] ${tone.panel}`}>
                   <div className="relative h-44 overflow-hidden">
@@ -342,11 +342,10 @@ function EditorialHome({ primaryTask, articlePosts, supportTasks }: { primaryTas
   )
 }
 
-function VisualHome({ primaryTask, imagePosts, profilePosts, articlePosts }: { primaryTask?: EnabledTask; imagePosts: SitePost[]; profilePosts: SitePost[]; articlePosts: SitePost[] }) {
+function VisualHome({ primaryTask, imagePosts, articlePosts }: { primaryTask?: EnabledTask; imagePosts: SitePost[]; articlePosts: SitePost[] }) {
   const tone = getVisualTone()
   const feedSource = imagePosts.length ? imagePosts : articlePosts
   const gallery = feedSource.slice(0, 16)
-  const creators = profilePosts.slice(0, 12)
 
   return (
     <main className={tone.shell}>
@@ -422,46 +421,13 @@ function VisualHome({ primaryTask, imagePosts, profilePosts, articlePosts }: { p
         </div>
       </section>
 
-      {creators.length ? (
-        <section className="border-t border-border/60 bg-muted/30">
-          <div className="mx-auto max-w-[1600px] px-4 py-12 sm:px-6 lg:px-10">
-            <div className="mb-6 flex items-end justify-between gap-4">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.28em] text-muted-foreground">Creators</p>
-                <h2 className="mt-2 text-2xl font-semibold tracking-tight text-foreground">Profiles worth visiting</h2>
-              </div>
-              <Link href="/profile" className="hidden text-sm font-semibold text-foreground underline-offset-4 hover:underline sm:inline">
-                See all
-              </Link>
-            </div>
-            <div className="-mx-1 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 pt-1 [scrollbar-width:thin]">
-              {creators.map((post) => (
-                <Link
-                  key={post.id}
-                  href={`/profile/${post.slug}`}
-                  className={`min-w-[220px] max-w-[260px] shrink-0 snap-start overflow-hidden rounded-[1.5rem] ${tone.panel} transition duration-300 hover:-translate-y-0.5 hover:shadow-lg`}
-                >
-                  <div className="relative aspect-[4/3] overflow-hidden bg-muted">
-                    <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" sizes="260px" />
-                  </div>
-                  <div className="p-4">
-                    <p className="font-semibold leading-snug text-foreground">{post.title}</p>
-                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{post.summary || 'Creator on the platform.'}</p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      ) : null}
     </main>
   )
 }
 
-function CurationHome({ primaryTask, bookmarkPosts, profilePosts, articlePosts }: { primaryTask?: EnabledTask; bookmarkPosts: SitePost[]; profilePosts: SitePost[]; articlePosts: SitePost[] }) {
+function CurationHome({ primaryTask, bookmarkPosts, articlePosts }: { primaryTask?: EnabledTask; bookmarkPosts: SitePost[]; articlePosts: SitePost[] }) {
   const tone = getCurationTone()
   const collections = bookmarkPosts.length ? bookmarkPosts.slice(0, 4) : articlePosts.slice(0, 4)
-  const people = profilePosts.slice(0, 3)
 
   return (
     <main className={tone.shell}>
@@ -504,16 +470,9 @@ function CurationHome({ primaryTask, bookmarkPosts, profilePosts, articlePosts }
             <h2 className="mt-3 text-3xl font-semibold tracking-[-0.04em]">More like saved boards and reading shelves than a generic post feed.</h2>
             <p className={`mt-4 max-w-2xl text-sm leading-8 ${tone.muted}`}>The structure is calmer, the cards are less noisy, and the page encourages collecting and returning instead of forcing everything into a fast-scrolling list.</p>
           </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            {people.map((post) => (
-              <Link key={post.id} href={`/profile/${post.slug}`} className={`rounded-[1.8rem] p-5 ${tone.soft}`}>
-                <div className="relative h-32 overflow-hidden rounded-[1.2rem]">
-                  <ContentImage src={getPostImage(post)} alt={post.title} fill className="object-cover" />
-                </div>
-                <h3 className="mt-4 text-lg font-semibold">{post.title}</h3>
-                <p className={`mt-2 text-sm leading-7 ${tone.muted}`}>Curator profile, saved resources, and collection notes.</p>
-              </Link>
-            ))}
+          <div className={`rounded-[2rem] p-7 ${tone.soft}`}>
+            <p className="text-xs font-semibold uppercase tracking-[0.24em] opacity-70">Organize and return</p>
+            <p className={`mt-3 text-sm leading-8 ${tone.muted}`}>Collections stay front and center so saved links are easy to revisit without profile cards in the layout.</p>
           </div>
         </div>
       </section>
@@ -540,7 +499,6 @@ export default async function HomePage() {
   const classifiedPosts = taskFeed.find(({ task }) => task.key === 'classified')?.posts || []
   const articlePosts = taskFeed.find(({ task }) => task.key === 'article')?.posts || []
   const imagePosts = taskFeed.find(({ task }) => task.key === 'image')?.posts || []
-  const profilePosts = taskFeed.find(({ task }) => task.key === 'profile')?.posts || []
   const bookmarkPosts = taskFeed.find(({ task }) => task.key === 'sbm')?.posts || []
 
   const schemaData = [
@@ -575,7 +533,6 @@ export default async function HomePage() {
           enabledTasks={enabledTasks}
           listingPosts={listingPosts}
           classifiedPosts={classifiedPosts}
-          profilePosts={profilePosts}
           brandPack={recipe.brandPack}
         />
       ) : null}
@@ -583,10 +540,10 @@ export default async function HomePage() {
         <EditorialHome primaryTask={primaryTask} articlePosts={articlePosts} supportTasks={supportTasks} />
       ) : null}
       {productKind === 'visual' ? (
-        <VisualHome primaryTask={primaryTask} imagePosts={imagePosts} profilePosts={profilePosts} articlePosts={articlePosts} />
+        <VisualHome primaryTask={primaryTask} imagePosts={imagePosts} articlePosts={articlePosts} />
       ) : null}
       {productKind === 'curation' ? (
-        <CurationHome primaryTask={primaryTask} bookmarkPosts={bookmarkPosts} profilePosts={profilePosts} articlePosts={articlePosts} />
+        <CurationHome primaryTask={primaryTask} bookmarkPosts={bookmarkPosts} articlePosts={articlePosts} />
       ) : null}
       <Footer />
     </div>

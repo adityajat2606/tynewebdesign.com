@@ -229,6 +229,7 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
   const content = getContent(post);
   const isArticle = task === "article";
   const isBookmark = task === "sbm" || task === "social";
+  const isImageTask = task === "image";
   const category = content.category || post.tags?.[0] || taskConfig?.label || task;
   const description = content.description || post.summary || "Details coming soon.";
   const descriptionHtml = !isArticle ? formatRichHtml(description, "Details coming soon.") : "";
@@ -357,6 +358,37 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
                   </div>
                 </div>
               </div>
+            ) : null}
+
+            {isImageTask ? (
+              <section className={`rounded-[2rem] p-6 ${experience.panelClass}`}>
+                <div className="flex items-center justify-between gap-3">
+                  <h2 className="text-2xl font-semibold tracking-[-0.03em] text-foreground">Photos</h2>
+                  <span className={`text-xs font-semibold uppercase tracking-[0.22em] ${experience.mutedClass}`}>
+                    {images.length} item{images.length === 1 ? "" : "s"}
+                  </span>
+                </div>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {images.map((image, index) => (
+                    <a
+                      key={`${image}-${index}`}
+                      href={image}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group overflow-hidden rounded-[1.25rem] border border-border bg-background"
+                    >
+                      <div className="relative aspect-square overflow-hidden">
+                        <ContentImage
+                          src={image}
+                          alt={`${post.title} photo ${index + 1}`}
+                          fill
+                          className="object-cover transition duration-300 ease-out group-hover:scale-[1.04]"
+                        />
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </section>
             ) : null}
           </div>
 

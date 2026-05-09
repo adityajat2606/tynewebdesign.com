@@ -48,6 +48,7 @@ export default async function SearchPage({
     const content = post.content && typeof post.content === "object" ? post.content : {};
     const typeText = compactText((content as any).type);
     if (typeText === "comment") return false;
+    if (typeText === "profile") return false;
     const description = compactText((content as any).description);
     const body = compactText((content as any).body);
     const excerpt = compactText((content as any).excerpt);
